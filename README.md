@@ -1,42 +1,93 @@
-# Common Ground — React 협업용 프로젝트
+## Design and Frontend
 
-`Prototype_1109.html`을 **React + TypeScript + Vite**로 전환한 프론트엔드 프로젝트입니다.
-iframe, `innerHTML`, HTML 파일 임베드 방식이 아니라 실제 JSX 컴포넌트와 React 상태로 작동합니다.
-화면의 모든 문구는 영어이며, 실행·협업 안내는 한국어로 제공합니다.
+| Location | Responsibility |
+| --- | --- |
+| `src/styles/app.css` | Theme, colors, fonts, spacing, and mobile layout |
+| `src/components/` | Reusable UI components: cards, avatars, icons, navigation, and inputs |
+| `src/pages/` | Page layouts and form state |
+| `src/App.tsx` | Navigation between screens and the overall app layout |
+| `src/data/config.ts` | Tab labels, event types, and onboarding notification topics |
 
-## 1. 처음 실행하기 (Windows / PowerShell)
+### Shared Components
 
-1. ZIP을 압축 해제합니다.
-2. VS Code의 **File → Open Folder**로 `common-ground-react` 폴더를 엽니다.
-3. **Terminal → New Terminal**을 엽니다. `package.json`이 보이는 폴더에서 아래 명령을 실행합니다.
+| Component | Responsibility |
+| --- | --- |
+| `EventCard.tsx` | Event cards displayed in the feed |
+| `EventArtwork.tsx` | Artwork displayed at the top of an event in place of a photo |
+| `Avatar.tsx` | Clickable profile image |
+| `BottomNav.tsx` | Bottom navigation with three tabs |
+| `AudiencePicker.tsx` | Event audience selection |
+| `PhotoPicker.tsx` | Photo selection and previews for profiles and reviews |
+| `Icon.tsx` | SVG icons implemented as React components |
+| `ResetDialog.tsx` | Demo reset confirmation dialog |
 
-```powershell
-npm install
-npm run dev
-```
+Keep UI changes within these files where possible. Manage data types, validation, and visibility rules in the functionality layer below.
 
-터미널에 표시된 `http://localhost:5173/` 등의 주소를 엽니다.
-Node.js **22.12 이상**의 지원되는 LTS 버전을 권장합니다.
-PowerShell이 `npm.ps1` 실행을 차단하면 `npm.cmd install`, `npm.cmd run dev`를 사용합니다.
+## Functionality and Data
 
-첫 실행은 **미등록 + Member + Social Events**입니다. 기존 HTML의 저장 정보는 가져오지 않습니다.
-등록 후에는 같은 브라우저와 같은 접속 주소에서 상태가 유지됩니다.
-처음 상태로 돌아가려면 상단의 **Reset demo → Reset demo data**를 누르세요.
+| Location | Responsibility |
+| --- | --- |
+| `src/types/index.ts` | TypeScript types for profiles, events, reviews, and audience conditions |
+| `src/context/CommunityProvider.tsx` | Shared application state and actions for registration, event creation, participation, and reviews |
+| `src/context/CommunityContext.ts` | The `useCommunity()` interface used by pages |
+| `src/services/localRepository.ts` | Browser storage, loading, resetting, and validation of saved data |
+| `src/services/eventRules.ts` | Audience matching, event validation, and organizer restrictions |
+| `src/services/photos.ts` | Image format and size validation, and compression |
+| `src/data/events.ts` | Sample event generation |
+| `src/data/profiles.ts` | Sample profiles and the empty profile template |
 
-## 2. 이미 만든 Vite 프로젝트에 넣기
+When adding a backend, replace the storage adapter and the Provider’s actions with asynchronous API calls. Pages do not access the storage implementation directly.
 
-가장 간단한 방법은 이 폴더 자체를 새 프로젝트로 실행하는 것입니다.
-기존 공동 Git 저장소를 사용하려면:
+## Features
 
-1. 기존 프로젝트 변경 사항을 먼저 커밋하거나 백업합니다.
-2. `git switch -c feat/react-migration`으로 작업 브랜치를 만듭니다.
-3. 이 프로젝트의 `src` 폴더와 `index.html`, `package.json`, 설정 파일들, `tests`, 문서를 기존 프로젝트 루트에 복사합니다. 기존 템플릿용 `src`는 이 버전으로 교체합니다.
-4. 기존 `.git` 폴더는 유지하고, 다른 프로젝트의 `node_modules`나 `dist`는 복사하지 않습니다.
-5. `npm install`을 실행해 의존성과 `package-lock.json`을 갱신합니다.
-6. `npm run build`, `npm test`로 확인한 뒤 변경 파일을 커밋합니다.
+### Event Feeds and Creation
 
-이 제공본에는 잠금 파일이 없습니다. 첫 `npm install` 후 생성되는 `package-lock.json`을 Git에 함께 올리세요.
-그다음부터 동료는 저장소를 내려받아 `npm ci`로 같은 버전을 설치할 수 있습니다.
+- Three feeds accessible through bottom navigation:
+  - **Opportunities**
+  - **Social Events**
+  - **Announcements**
+- Create events using the pencil button and select an event type.
+- Newly created events appear at the top of the corresponding feed.
+- Select an event’s audience based on interests, course history, profession, or major.
+- Ended events are displayed in gray.
+
+### Reviews
+
+- Add reviews to ended events.
+- Include text and up to four photos.
+- Preview selected photos before posting.
+
+### Registration and Profiles
+
+- A name is required during registration.
+- Optional fields include social links, profession, bio, major, interests, and course history.
+- Upload a profile photo.
+- View a profile by clicking an author’s photo.
+- Add course history entries such as `Innovation Sprint 26w` and `Tech Challenge 25w`.
+- View the number of events a person has joined.
+
+### Participation
+
+- Join upcoming events.
+- Confirm participation in past events.
+- Cancel participation.
+- Update the profile’s event count when participation changes.
+
+### Notification Preferences
+
+- Select multiple notification topics during onboarding.
+- Skip notification preferences if desired.
+- Update preferences later.
+
+### Demo Storage
+
+- Save data locally in the browser.
+- Use **Reset demo** to clear the app’s saved data and return to the initial state.
+- Data is not shared between users or devices.
+- Notification preferences are saved, but notifications are not sent.
+- Registration and organizer roles are for demonstration purposes; real authentication is not implemented.
+
+> **Photo uploads:** Event creation displays only an empty photo placeholder and explanatory text. Photo selection and previews are implemented for profiles and reviews.   
 
 ## 3. 디자이너/프론트 담당자가 수정할 곳
 
@@ -100,68 +151,3 @@ UI를 바꿀 때는 가능한 한 이 파일들만 수정하고, 데이터 형�
 - 공개 대상과 알림 설정은 별개입니다. `Interests`는 프로필 특성이고, 온보딩의 선택은 알림 선호입니다.
 - `Events joined`는 직접 참가 신청하거나 과거 참여를 확인한 고유 이벤트의 수입니다. 실제 출석을 검증한 숫자는 아닙니다.
 - 예시 프로필의 참여 내역은 시연용 데이터입니다.
-
-## 6. 현재는 백엔드 없는 체험용 앱
-
-- 실제 계정 인증은 없습니다. Register는 로컬 프로필 등록입니다.
-- `Demo role` 전환과 공개 조건은 프론트 체험용입니다. 실제 서비스에서는 서버/DB에서도 검증해야 합니다.
-- 사용자끼리 데이터가 공유되지 않습니다. 각 브라우저에 별도로 저장됩니다.
-- 알림 선호는 저장하지만 푸시/이메일 알림을 발송하지 않습니다.
-- 저장 키는 `common-ground-react-demo-v1`입니다. 기존 HTML과 다른 키를 사용합니다.
-- 사진이 많아 브라우저 저장 한도를 넘으면 현재 세션에서만 변경을 유지하고 안내를 표시합니다.
-- 프론트에는 비밀번호나 서버 비밀 키를 넣지 마세요.
-
-## 7. 개발 명령
-
-```powershell
-npm run dev
-npm run build
-npm run preview
-npm test
-npm run lint
-```
-
-| 명령 | 용도 |
-| --- | --- |
-| `dev` | 수정하며 개발하는 서버 |
-| `build` | TypeScript 검사 후 `dist` 생성 |
-| `preview` | 생성된 `dist` 로컬 확인 |
-| `test` | 규칙·저장·등록·참여·후기 등 자동 테스트 |
-| `lint` | ESLint 검사 |
-
-검증 수행 범위와 환경 제한은 `VALIDATION.md`를 확인하세요.
-
-## 8. 링크로 배포하기
-
-`localhost`는 외부 공유 주소가 아닙니다. Git 저장소를 프론트 호스팅에 연결해서 배포하세요.
-Vite를 지원하는 호스팅에서 기본 설정은:
-
-- Install command: `npm install` (잠금 파일을 커밋한 뒤에는 `npm ci` 사용 가능)
-- Build command: `npm run build`
-- Output directory: `dist`
-
-이 앱은 화면 상태로 이동하므로 `/profile` 등의 별도 서버 경로 설정은 필요 없습니다.
-화면 이동은 주소를 바꾸지 않으며, 새로고침하면 기본 피드로 돌아갑니다. 저장 데이터는 유지됩니다.
-하위 경로에 배포한다면 `vite.config.ts`의 `base`를 배포 경로에 맞게 설정하세요.
-
-## 9. Git 협업
-
-권장 분담:
-
-- 기능 담당: `types`, `services`, `context`, 데이터 테스트
-- 디자인 담당: `styles`, `components`, `pages`의 JSX
-
-같은 화면에서 폼 로직과 레이아웃을 동시에 바꾸면 충돌할 수 있으므로 작업 파일을 먼저 나누세요.
-`main`에 직접 같이 쓰기보다 각자 브랜치에서 작업하고 PR로 합치는 방식이 좋습니다.
-`node_modules`, `dist`는 커밋하지 않고, `package-lock.json`은 커밋합니다.
-
-## 10. 기능 확인 순서
-
-1. Register → 이름/수강 이력/관심 분야 입력 → Continue
-2. Workshop, Robotics, Party 등 여러 항목 선택 → Finish registration
-3. 본인 아바타 → 프로필 내용과 수강 이력 확인
-4. Coffee 이벤트 → Join event → 프로필의 Events joined 증가 확인
-5. 연필 → 이벤트 작성 → 공개 대상 조건 선택 → 해당 피드 최상단 확인
-6. 회색 Alumni Autumn Social → Add a review → 글/사진 등록
-7. Announcements → Member 잠금 확인 → Demo role을 Organizer로 전환
-8. Reset demo → 미등록 상태로 복원
