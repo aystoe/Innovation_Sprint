@@ -1103,3 +1103,152 @@ h1, .hero h2, .art-title { white-space: pre-line; }
 .member-card-foot > span:last-child { color:var(--green); font-weight:650; }
 .profile-photo-wrapper { margin-top:15px; }
 @media (max-width:340px) { .member-filter-grid { grid-template-columns:1fr; } }
+
+/* ---------- Course achievement badges ---------- */
+.course-grid{
+list-style:none;
+  margin:8px 0 4px;
+  padding:0;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(86px,1fr));
+  gap:6px;
+  align-items:stretch}
+.course-card{
+--a:#b3a8c9;
+  --b:#6d5f8c;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  padding:6px 3px 5px;
+  border:1.5px solid var(--line);
+  border-radius:14px;
+  background:#fbfaf6;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .18s ease}
+.course-card:hover{
+transform:translateY(-2px);
+  border-color:var(--a);
+  box-shadow:0 8px 14px -10px var(--b)}
+.course-grid--static .course-card:hover{
+transform:none;
+  box-shadow:none}
+.course-card.is-on,.course-card.is-on:hover{
+border:2px solid var(--b);
+  padding:5.5px 2.5px 4.5px;
+  background:linear-gradient(180deg,#fff,color-mix(in srgb,var(--a) 16%,#fff));
+  box-shadow:0 6px 12px -10px var(--b)}
+.course-badge{
+display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  width:100%;
+  flex:1;
+  padding:0;
+  border:0;
+  background:none;
+  text-align:center;
+  min-width:0}
+button.course-badge:active .course-badge__medal{
+transform:scale(.94)}
+button.course-badge:focus-visible{
+outline:3px solid var(--b);
+  outline-offset:2px;
+  border-radius:10px}
+.course-badge__medal{
+width:40px;
+  height:40px;
+  overflow:visible;
+  filter:saturate(.18) opacity(.62);
+  transition:filter .25s ease,transform .18s ease}
+button.course-badge:hover .course-badge__medal{
+filter:saturate(.55) opacity(.85)}
+.course-badge__icon{
+fill:none;
+  stroke:#fff;
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round}
+.course-badge__icon .soft{
+fill:#fff;
+  fill-opacity:.26}
+.course-badge__icon .solid{
+fill:#fff;
+  stroke:none}
+.course-badge__name{
+display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:3.75em;
+  font-size:9px;
+  font-weight:700;
+  line-height:1.25;
+  color:var(--muted);
+  overflow-wrap:anywhere;
+  hyphens:auto}
+.course-badge__term{
+font-size:8.5px;
+  font-weight:700;
+  letter-spacing:.06em;
+  padding:0 6px;
+  border-radius:8px;
+  background:color-mix(in srgb,var(--a) 22%,#fff);
+  color:var(--b)}
+.course-badge__check{
+position:absolute;
+  top:4px;
+  right:4px;
+  width:17px;
+  height:17px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--b);
+  box-shadow:0 0 0 1.5px #fff;
+  transform:scale(0);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.course-badge__check svg{
+width:11px;
+  height:11px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round}
+.course-badge.is-on .course-badge__name{
+color:var(--ink)}
+.course-badge.is-on .course-badge__medal{
+filter:drop-shadow(0 3px 4px color-mix(in srgb,var(--b) 35%,transparent));
+  animation:badge-pop .45s cubic-bezier(.34,1.56,.64,1)}
+.course-card.is-on .course-badge__check{
+transform:scale(1)}
+.course-slot{
+display:flex;
+  align-items:center;
+  justify-content:center;
+  height:22px}
+.course-select{
+width:100%;
+  height:22px;
+  border:1px solid color-mix(in srgb,var(--b) 40%,#fff);
+  border-radius:8px;
+  background:#fff;
+  color:var(--b);
+  font-size:9.5px;
+  font-weight:700;
+  padding:0 2px;
+  animation:badge-fade .25s ease}
+.course-select:focus-visible{
+outline:2px solid var(--b);
+  outline-offset:1px}
+@keyframes badge-pop{
+0%{transform:scale(.82) rotate(-6deg)}
+  60%{transform:scale(1.08) rotate(2deg)}
+  100%{transform:scale(1) rotate(0)}}
+@keyframes badge-fade{
+from{opacity:0;transform:translateY(-3px)}
+  to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+.course-card,.course-badge__medal,.course-badge__check{transition:none}
+  .course-badge.is-on .course-badge__medal,.course-select{animation:none}
+  .course-card:hover{transform:none}}
