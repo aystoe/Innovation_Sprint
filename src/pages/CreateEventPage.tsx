@@ -8,13 +8,13 @@ import { BackButton } from '../components/BackButton'
 import { FormError } from '../components/FormError'
 import { Icon } from '../components/Icon'
 export function CreateEventPage({ feed, onBack, onPublished }: { feed: FeedId; onBack: () => void; onPublished: (event: CommunityEvent) => void }) {
-  const { role, publishEvent } = useCommunity()
-  const [value, setValue] = useState<EventInput>({ type: feed === 'notices' && role === 'organizer' ? 'announcement' : feed === 'official' ? 'job' : 'alumni', title: '', description: '', location: '', start: '', end: '', topics: [], audience: { mode: 'everyone', traits: [] } })
+  const { publishEvent } = useCommunity()
+  const [value, setValue] = useState<EventInput>({ type: feed === 'official' ? 'job' : 'alumni', title: '', description: '', location: '', start: '', end: '', topics: [], audience: { mode: 'everyone', traits: [] } })
   const [error, setError] = useState('')
   function submit(e: FormEvent) { e.preventDefault(); try { onPublished(publishEvent(value)) } catch (e) { setError(e instanceof Error ? e.message : 'Could not publish this event.') } }
   return <><BackButton onClick={onBack} /><span className="eyebrow block">Bring people together</span><h1>Create an event</h1><p className="intro">Share an opportunity, plan a meetup or keep your team informed.</p>
     <form onSubmit={submit}>
-      <label className="field">Event type<select value={value.type} onChange={e => setValue({ ...value, type: e.target.value as EventType })}>{(Object.keys(EVENT_TYPES) as EventType[]).map(type => <option key={type} value={type} disabled={type === 'announcement' && role !== 'organizer'}>{EVENT_TYPES[type].label}{type === 'announcement' ? ' · Organizers only' : ''}</option>)}</select></label>
+      <label className="field">Event type<select value={value.type} onChange={e => setValue({ ...value, type: e.target.value as EventType })}>{(Object.keys(EVENT_TYPES) as EventType[]).filter(type => type !== 'announcement').map(type => <option key={type} value={type}>{EVENT_TYPES[type].label}</option>)}</select></label>
       <p className="help">This post will appear in {FEEDS[EVENT_TYPES[value.type].feed].label}.</p>
       <label className="field">Title<input value={value.title} onChange={e => setValue({ ...value, title: e.target.value })} placeholder="Give your event a clear title" maxLength={100} required /></label>
       <label className="field">Description<textarea value={value.description} onChange={e => setValue({ ...value, description: e.target.value })} placeholder="What is it about? Who should join?" maxLength={3000} required /></label>

@@ -33,6 +33,7 @@ export function validateEvent(input: EventInput, role: Role): string | null {
   if (!input.title.trim() || !input.description.trim() || !input.location.trim() || !Number.isFinite(Date.parse(input.start)) || !Number.isFinite(Date.parse(input.end))) return 'Please complete every required field.'
   if (Date.parse(input.end) <= Date.parse(input.start)) return 'The end time must be after the start time.'
   if (input.title.length > 100 || input.description.length > 3000 || input.location.length > 140) return 'Please keep your text within the field limits.'
+  if (input.topics !== undefined && (!Array.isArray(input.topics) || input.topics.length > 30 || input.topics.some(topic => typeof topic !== 'string' || !topic.trim() || topic.length > 100))) return 'Please choose valid interest tags.'
   if (input.audience.mode === 'targeted' && !input.audience.traits.length) return 'Select at least one audience trait, or choose Everyone.'
   return null
 }

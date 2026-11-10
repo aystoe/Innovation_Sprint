@@ -1,6 +1,13 @@
-import type { FeedId, NavigationId } from '../types'
+import type { NavigationId } from '../types'
 import { FEEDS } from '../data/config'
 import { Icon } from './Icon'
-export function BottomNav({ active, onSelect }: { active: NavigationId; onSelect: (feed: NavigationId) => void }) {
-  return <nav className="nav" aria-label="Event feeds">{(Object.keys(FEEDS) as FeedId[]).map(id => <button type="button" key={id} className={active === id ? 'active' : ''} aria-current={active === id ? 'page' : undefined} onClick={() => onSelect(id)}><span className="nav-icon"><Icon name={FEEDS[id].icon} /></span><span>{FEEDS[id].label}</span></button>)}<button type="button" className={active === 'leaderboard' ? 'active' : ''} aria-current={active === 'leaderboard' ? 'page' : undefined} onClick={() => onSelect('leaderboard')}><span className="nav-icon"><Icon name="trophy" /></span><span>Leaderboard</span></button></nav>
+
+const ITEMS = [
+  { id: 'official', label: FEEDS.official.label, icon: FEEDS.official.icon },
+  { id: 'social', label: FEEDS.social.label, icon: FEEDS.social.icon },
+  { id: 'members', label: 'Members', icon: 'search' },
+  { id: 'leaderboard', label: 'Leaderboard', icon: 'trophy' },
+] as const
+export function BottomNav({ active, onSelect }: { active: NavigationId; onSelect: (id: NavigationId) => void }) {
+  return <nav className="nav" aria-label="Community navigation">{ITEMS.map(item => <button type="button" key={item.id} className={active === item.id ? 'active' : ''} aria-current={active === item.id ? 'page' : undefined} onClick={() => onSelect(item.id)}><span className="nav-icon"><Icon name={item.icon} /></span><span>{item.label}</span></button>)}</nav>
 }

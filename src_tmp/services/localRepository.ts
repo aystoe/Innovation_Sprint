@@ -17,7 +17,7 @@ function validTrait(v: unknown): v is AudienceTrait {
   return record(v) && ['interests','courses','profession','major'].includes(String(v.kind)) && typeof v.value === 'string'
 }
 function validEvent(v: unknown): v is CommunityEvent {
-  return record(v) && ['id','title','description','location','author','authorId','color','art'].every(k => typeof v[k] === 'string') && typeof v.type === 'string' && Object.hasOwn(EVENT_TYPES, v.type) && date(v.start) && date(v.end) && Array.isArray(v.reviews) && v.reviews.every(validReview) && record(v.audience) && ['everyone','targeted'].includes(String(v.audience.mode)) && Array.isArray(v.audience.traits) && v.audience.traits.every(validTrait)
+  return record(v) && ['id','title','description','location','author','authorId','color','art'].every(k => typeof v[k] === 'string') && typeof v.type === 'string' && Object.hasOwn(EVENT_TYPES, v.type) && (v.topics === undefined || strings(v.topics)) && date(v.start) && date(v.end) && Array.isArray(v.reviews) && v.reviews.every(validReview) && record(v.audience) && ['everyone','targeted'].includes(String(v.audience.mode)) && Array.isArray(v.audience.traits) && v.audience.traits.every(validTrait)
 }
 export const freshSnapshot = (): Snapshot => ({ version: 1, profile: null, events: createSeedEvents() })
 export function loadSnapshot(): { snapshot: Snapshot; warning: string } {

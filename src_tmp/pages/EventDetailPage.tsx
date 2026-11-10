@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useCommunity } from '../context/CommunityContext'
 import { EVENT_TYPES } from '../data/config'
+import { eventTopics } from '../services/eventInterests'
 import { audienceLabel, canReadEvent } from '../services/eventRules'
 import { isEnded, dateTime } from '../utils/format'
 import { Avatar } from '../components/Avatar'
@@ -25,6 +26,7 @@ export function EventDetailPage({ eventId, onBack, onProfile, onReview, onRegist
     <div className="detail-person"><Avatar person={author} onClick={() => onProfile(event.authorId)} label="View event organizer profile" /><button type="button" onClick={() => onProfile(event.authorId)}>{author?.name ?? event.author}</button></div>
     <p className="audience-info">Visible to: {audienceLabel(event)}</p>
     {!['job', 'cofounder', 'announcement'].includes(event.type) && <button type="button" className="secondary" onClick={join}>{joined ? 'Joined · Leave event' : past ? 'I attended this event' : 'Join event'}</button>}
+    <div className="filter-chips" aria-label="Event interests">{eventTopics(event).map(topic => <span className="interest-button" key={topic}>{topic}</span>)}</div>
     <p className="detail-copy">{event.description}</p>
     {past && <><div className="ended-banner">This event has ended. Share your memories and feedback with the community.</div><button type="button" className="primary" onClick={onReview}><Icon name="star" />Add a review</button></>}
     <div className="section-head"><strong>Community reviews</strong><span>{event.reviews.length} {event.reviews.length === 1 ? 'review' : 'reviews'}</span></div>

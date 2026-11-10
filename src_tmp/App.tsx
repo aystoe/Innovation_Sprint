@@ -7,6 +7,7 @@ import { Avatar } from './components/Avatar'
 import { BottomNav } from './components/BottomNav'
 import { Icon } from './components/Icon'
 import { ResetDialog } from './components/ResetDialog'
+import { LeaderboardPage } from './pages/LeaderboardPage'
 import { EventFeedPage } from './pages/EventFeedPage'
 import { CreateEventPage } from './pages/CreateEventPage'
 import { EventDetailPage } from './pages/EventDetailPage'
@@ -36,13 +37,14 @@ export default function App() {
   function startRegistration() { setRegistrationDraft(store.snapshot.profile ? structuredClone(store.snapshot.profile) : emptyProfile()); setPage({ kind: 'register' }) }
   function openProfile(personId: string) {
     if (personId === 'me' && !store.snapshot.profile) { startRegistration(); return }
-    const backTo: BackPage = page.kind === 'detail' ? page : page.kind === 'profile' ? page.backTo : { kind: 'feed' }
+    const backTo: BackPage = page.kind === 'detail' ? page : page.kind === 'profile' ? page.backTo : page.kind === 'leaderboard' ? page : { kind: 'feed' }
     setPage({ kind: 'profile', personId, backTo })
   }
   function finishRegistration(profile: Profile) { store.saveProfile(profile); backToFeed(); notify('You’re all set. Your profile and preferences are saved.') }
   function resetDemo() { store.resetDemo(); setRegistrationDraft(emptyProfile()); setFeed('social'); setShowReset(false); backToFeed(); notify('Demo reset. Start again with Register.') }
   let content
   switch (page.kind) {
+    case 'leaderboard': content = <LeaderboardPage onProfile={openProfile} />; break
     case 'feed': content = <EventFeedPage feed={feed} onEvent={eventId => setPage({ kind: 'detail', eventId })} onProfile={openProfile} />; break
     case 'create': content = <CreateEventPage feed={feed} onBack={backToFeed} onPublished={event => { setFeed(EVENT_TYPES[event.type].feed); backToFeed(); notify('Event published to your feed.') }} />; break
     case 'detail': content = <EventDetailPage eventId={page.eventId} onBack={backToFeed} onProfile={openProfile} onReview={() => setPage({ kind: 'review', eventId: page.eventId })} onRegister={startRegistration} notify={notify} />; break
@@ -58,7 +60,7 @@ export default function App() {
     {store.storageWarning && <p className="storage-warning" role="status">{store.storageWarning}</p>}
     <main className="page" ref={main} key={page.kind}>{content}</main>
     {page.kind === 'feed' && !(feed === 'notices' && store.role !== 'organizer') && <button type="button" className="fab" aria-label="Create an event" onClick={() => setPage({ kind: 'create' })}><Icon name="pencil" /></button>}
-    {!formFlow && <BottomNav active={feed} onSelect={id => { setFeed(id); backToFeed() }} />}
+    {!formFlow && <BottomNav active={page.kind === 'leaderboard' || (page.kind === 'profile' && page.backTo.kind === 'leaderboard') ? 'leaderboard' : feed} onSelect={id => { if (id === 'leaderboard') setPage({ kind: 'leaderboard' }); else { setFeed(id); backToFeed() } }} />}
     <div className="homebar" aria-hidden="true" /><div className={`toast ${toast ? 'show' : ''}`} role="status" aria-live="polite">{toast}</div>
     {showReset && <ResetDialog onConfirm={resetDemo} onCancel={() => setShowReset(false)} />}
   </div>

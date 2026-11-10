@@ -1,3 +1,4 @@
+import { SEED_EVENT_TOPICS } from '../services/eventInterests'
 import type { CommunityEvent } from '../types'
 
 function relativeDate(days: number, hour = 18) { const d = new Date(); d.setDate(d.getDate() + days); d.setHours(hour, 0, 0, 0); return d.toISOString() }
@@ -13,5 +14,5 @@ export function createSeedEvents(): CommunityEvent[] {
 {id:'notice-1',type:'announcement',title:'Next cohort: organizer briefing',description:'Please join our internal briefing to confirm the welcome-session agenda, room assignments and mentoring schedule. Bring your latest planning notes.',location:'Meeting room 2 · Munich Urban Colab',start:relativeDate(2,9),end:relativeDate(2,10),author:'Programme coordination',color:'blue',art:'A little planning.\nA better programme.',reviews:[]},
 {id:'notice-2',type:'announcement',title:'October retrospective',description:'Thank you for joining our organizer retrospective. Add your reflections so we can carry the lessons into the next cohort.',location:'Organizer workspace',start:relativeDate(-9,14),end:relativeDate(-9,15),author:'Programme coordination',color:'',art:'Reflect together.\nImprove together.',reviews:[]}
 ]
-  return seeds.map<CommunityEvent>((event) => ({ ...event, type: event.type as CommunityEvent['type'], authorId: event.author.includes('Maya') ? 'maya' : event.author.includes('Jonas') ? 'jonas' : event.author.includes('Sprout') ? 'alex' : 'organizer', audience: { mode: 'everyone', traits: [] } }))
+  return seeds.map<CommunityEvent>((event) => ({ ...event, topics: SEED_EVENT_TOPICS[event.id] ?? [], type: event.type as CommunityEvent['type'], authorId: event.author.includes('Maya') ? 'maya' : event.author.includes('Jonas') ? 'jonas' : event.author.includes('Sprout') ? 'alex' : 'organizer', audience: { mode: 'everyone', traits: [] } }))
 }

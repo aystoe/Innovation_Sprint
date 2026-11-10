@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { IconName } from '../types'
 const paths: Record<IconName, ReactNode> = {
+  'search': <><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></>,
   'trophy': <><path d="M7 3h10v5a5 5 0 0 1-10 0V3ZM7 5H3v2a4 4 0 0 0 4 4m10-6h4v2a4 4 0 0 1-4 4m-5 2v5m-4 3h8m-7 0v-3h6v3" /></>,
   'leaf': <><path d="M20 3C8 2 2 8 5 15s15 4 15-12ZM4 21 15 10"/></>,
   'bag': <><rect x="3" y="7" width="18" height="14" rx="3"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12a21 21 0 0 0 18 0m-9 0v4"/></>,

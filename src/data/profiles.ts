@@ -1,4 +1,5 @@
 import type { Profile } from '../types'
+import { DEMO_MEMBERS } from './demoMembers'
 import { avatarImage } from '../utils/avatar'
 
 const rawProfiles = {
@@ -8,6 +9,6 @@ alex:{name:'Alex Morgan',occupation:'Software Engineer',bio:'I enjoy robotics, p
 organizer:{name:'Sam Taylor',occupation:'Programme Coordinator',bio:'Helping our community learn, build and stay connected. I organize programme sessions, alumni meetups and opportunities to share experience.',interests:'Networking, Workshop, Entrepreneurship',major:'Management',courses:'Innovation Sprint 26w',photo:avatarImage('#d8e5e9','#60848c'),attendedEventIds:['social-3','official-3']}
 }
 
-export const SAMPLE_PROFILES: Record<string, Profile> = Object.fromEntries(Object.entries(rawProfiles).map(([id, value]) => [id, { ...value, id, social: '', socialOther: '', topics: [] }]))
+export const SAMPLE_PROFILES: Record<string, Profile> = Object.fromEntries([...Object.entries(rawProfiles).map(([id, value]) => [id, { ...value, id, social: '', socialOther: '', topics: [] }] as const), ...DEMO_MEMBERS.map(profile => [profile.id, profile] as const)])
 
 export const emptyProfile = (): Profile => ({ id: 'me', name: '', occupation: '', bio: '', major: '', interests: '', courses: '', photo: '', social: '', socialOther: '', topics: [], attendedEventIds: [] })
