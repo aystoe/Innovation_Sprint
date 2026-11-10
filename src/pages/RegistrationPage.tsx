@@ -23,6 +23,10 @@ export function RegistrationPage({ initial, onBack, onContinue }: { initial: Pro
   }
   return <div className="profile-flow"><BackButton onClick={onBack}>Back to events</BackButton><div className="steps" aria-label="Step 1 of 2"><span className="done" /><span /></div><p className="step-label">Step 1 of 2 · Your profile</p>
     <form onSubmit={submit}>
+      <div className="profile-photo-preview"><img src={photoSource(draft.photo)} alt="Your profile photo preview" /><span className="profile-picture-help">Optional profile photo</span></div>
+      <PhotoPicker max={1} label="Add profile photo" photos={isPhoto(draft.photo) ? [draft.photo] : []} onChange={photos => field('photo', photos[0] ?? '')} onBusyChange={setBusy} />
+      <label className="field">Name <span aria-hidden="true">*</span><input name="name" autoComplete="name" placeholder="Your name" maxLength={80} value={draft.name} onChange={e => field('name', e.target.value)} required aria-required="true" /></label><p className="help">Required. This is the name your community will see.</p>
+      <label className="field">Profession<select name="occupation" value={draft.occupation} onChange={e => field('occupation', e.target.value)} >    <option value="">Select your profession (optional)</option> {PROFESSIONS.map(profession => ( <option key={profession} value={profession}> {profession} </option>))} </select> </label> 
       <ContactPreferencePicker
         value={getContactOption(draft.contactPreference).value}
         onChange={contactPreference => {
@@ -32,10 +36,6 @@ export function RegistrationPage({ initial, onBack, onContinue }: { initial: Pro
           }))
         }}
       />
-      <div className="profile-photo-preview"><img src={photoSource(draft.photo)} alt="Your profile photo preview" /><span className="profile-picture-help">Optional profile photo</span></div>
-      <PhotoPicker max={1} label="Add profile photo" photos={isPhoto(draft.photo) ? [draft.photo] : []} onChange={photos => field('photo', photos[0] ?? '')} onBusyChange={setBusy} />
-      <label className="field">Name <span aria-hidden="true">*</span><input name="name" autoComplete="name" placeholder="Your name" maxLength={80} value={draft.name} onChange={e => field('name', e.target.value)} required aria-required="true" /></label><p className="help">Required. This is the name your community will see.</p>
-      <label className="field">Profession<select name="occupation" value={draft.occupation} onChange={e => field('occupation', e.target.value)} >    <option value="">Select your profession (optional)</option> {PROFESSIONS.map(profession => ( <option key={profession} value={profession}> {profession} </option>))} </select> </label> 
       <details className="optional-fields" open><summary>More about you <span className="optional-tag">Optional</span></summary><p className="help">Share as much or as little as you like.</p>
         <label className="field">Which courses have you taken?<input name="courses" list="course-suggestions" placeholder="e.g. Innovation Sprint 26w, Tech Challenge 25w" maxLength={500} value={draft.courses} onChange={e => field('courses', e.target.value)} /></label>
         <datalist id="course-suggestions">  {[    'Innovation Sprint 26w',    'Innovation Sprint 25w',    'Tech Challenge 26w',    'Manage and More 25s',  ].map(course => (    <option key={course} value={course} />  ))} </datalist>
