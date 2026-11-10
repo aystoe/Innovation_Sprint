@@ -17,10 +17,10 @@ describe('event visibility and creation rules', () => {
   it('keeps a creator’s targeted posts visible without granting organizer access', () => {
     const event = createSeedEvents()[0]
     event.authorId = 'me'; event.audience = { mode: 'targeted', traits: [{ kind: 'major', value: 'Unrelated major' }] }
-    expect(canReadEvent(event, null, 'member')).toBe(true)
+    expect(canReadEvent(event, null)).toBe(true)
     event.type = 'announcement'
-    expect(canReadEvent(event, null, 'member')).toBe(false)
-    expect(canReadEvent(event, null, 'organizer')).toBe(true)
+    expect(canReadEvent(event, null)).toBe(false)
+    expect(canReadEvent(event, null)).toBe(true)
   })
   it('validates dates, required fields and targeted audience', () => {
     const seed = createSeedEvents()[0]

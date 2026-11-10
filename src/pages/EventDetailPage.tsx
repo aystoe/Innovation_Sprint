@@ -13,7 +13,7 @@ export function EventDetailPage({ eventId, onBack, onProfile, onReview, onRegist
   const [, tick] = useState(0)
   useEffect(() => { const timer = window.setInterval(() => tick(n => n + 1), 30_000); return () => clearInterval(timer) }, [])
   const event = snapshot.events.find(e => e.id === eventId)
-  if (!event || !canReadEvent(event, snapshot.profile, role)) return <><BackButton onClick={onBack} /><div className="empty"><h2>This event is unavailable.</h2><p>It may be restricted to another audience.</p></div></>
+  if (!event || !canReadEvent(event, snapshot.profile)) return <><BackButton onClick={onBack} /><div className="empty"><h2>This event is unavailable.</h2><p>It may be restricted to another audience.</p></div></>
   const past = isEnded(event), author = getPerson(event.authorId), joined = snapshot.profile?.attendedEventIds.includes(event.id)
   function join() {
     if (!snapshot.profile) { notify('Register your profile to join events.'); onRegister(); return }

@@ -33,7 +33,7 @@ export function CommunityProvider({ children }: PropsWithChildren) {
   }
   function addReview(eventId: string, text: string, photos: string[]) {
     const event = current.current.events.find(e => e.id === eventId)
-    if (!event || !canReadEvent(event, current.current.profile, role) || !isEnded(event)) throw new Error('Reviews are available only for ended events you can access.')
+    if (!event || !canReadEvent(event, current.current.profile) || !isEnded(event)) throw new Error('Reviews are available only for ended events you can access.')
     if (!text.trim() && !photos.length) throw new Error('Add a comment or at least one photo to post your review.')
     if (photos.length > 4 || !photos.every(isPhoto)) throw new Error('Choose up to 4 valid photos.')
     const review = { id: newId(), name: current.current.profile?.name || 'You · Alumni', text: text.trim().slice(0, 2000), photos, date: new Date().toISOString() }
@@ -43,7 +43,7 @@ export function CommunityProvider({ children }: PropsWithChildren) {
     const profile = current.current.profile
     const event = current.current.events.find(e => e.id === eventId)
     if (!profile) throw new Error('Register your profile to join events.')
-    if (!event || !canReadEvent(event, profile, role) || ['job', 'cofounder', 'announcement'].includes(event.type)) throw new Error('You cannot join this event.')
+    if (!event || !canReadEvent(event, profile) || ['job', 'cofounder', 'announcement'].includes(event.type)) throw new Error('You cannot join this event.')
     const ids = new Set(profile.attendedEventIds)
     if (ids.has(eventId)) ids.delete(eventId); else ids.add(eventId)
     saveProfile({ ...profile, attendedEventIds: [...ids] })

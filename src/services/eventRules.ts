@@ -17,8 +17,15 @@ export function matchesAudience(event: CommunityEvent, profile: Profile | null):
   if (!profile) return false
   return event.audience.traits.some(trait => profileTraits(profile, trait.kind).some(v => v.toLowerCase().trim() === trait.value.toLowerCase().trim()))
 }
-export function canReadEvent(event: CommunityEvent, profile: Profile | null, role: Role) {
-  return (EVENT_TYPES[event.type].feed !== 'notices' || role === 'organizer') && matchesAudience(event, profile)
+export function canReadEvent(
+  event: CommunityEvent,
+  profile: Profile | null
+) {
+  if (event.type === 'announcement') {
+    return true
+  }
+
+  return matchesAudience(event, profile)
 }
 export function validateEvent(input: EventInput, role: Role): string | null {
   if (!Object.hasOwn(EVENT_TYPES, input.type)) return 'Please choose an event type.'

@@ -4,6 +4,7 @@ export type Role = 'member' | 'organizer'
 export type EventType = 'job' | 'cofounder' | 'official' | 'hobby' | 'alumni' | 'party' | 'announcement'
 export type IconName = 'leaf' | 'bag' | 'people' | 'notice' | 'pencil' | 'calendar' | 'pin' | 'back' | 'photo' | 'lock' | 'star' | 'bell'
 export type TraitKind = 'interests' | 'courses' | 'profession' | 'major'
+export type ContactPreference = 'gray' | 'yellow' | 'green'
 export interface AudienceTrait { kind: TraitKind; value: string }
 export interface Audience { mode: 'everyone' | 'targeted'; traits: AudienceTrait[] }
 export interface Profile {
@@ -19,6 +20,8 @@ export interface Profile {
   socialOther: string
   topics: string[]
   attendedEventIds: string[]
+  contactPreference?: ContactPreference
+
 }
 export interface Review { id: string; name: string; text: string; photos: string[]; date: string }
 export interface CommunityEvent {
