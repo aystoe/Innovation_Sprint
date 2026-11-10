@@ -1,4 +1,4 @@
-/** Compress photos before storing. Event creation intentionally has no upload control. */
+/** Compress photos before storing. Used by event, profile and review uploads. */
 export function preparePhoto(file: File): Promise<string> {
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return Promise.reject(new Error('Please choose a JPEG, PNG or WebP photo.'))
   if (file.size > 5 * 1024 * 1024) return Promise.reject(new Error('Each photo must be 5 MB or smaller.'))

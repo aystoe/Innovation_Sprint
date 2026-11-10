@@ -7,12 +7,13 @@ import { PhotoPicker } from '../components/PhotoPicker'
 import { photoSource, isPhoto } from '../utils/avatar'
 import { ContactPreferencePicker } from '../components/ContactPreferencePicker'
 import { getContactOption } from '../data/contactPreferences'
+import { CONTRIBUTIONS } from '../services/organizer'
 import { isWebUrl } from '../utils/format'
 const PROFESSIONS = ['Student',  'Alumni',  'Founder',  'Educator',  'Organizer',]
 export function RegistrationPage({ initial, onBack, onContinue }: { initial: Profile; editing: boolean; onBack: () => void; onContinue: (profile: Profile) => void }) {
   const [draft, setDraft] = useState(() => ({...initial, occupation: PROFESSIONS.includes(initial.occupation) ? initial.occupation : '', }))
   const [busy, setBusy] = useState(false), [error, setError] = useState('')
-  function field(key: Exclude<keyof Profile, 'topics' | 'attendedEventIds'>, value: string) { setDraft(d => ({ ...d, [key]: value })) }
+  function field(key: Exclude<keyof Profile, 'topics' | 'attendedEventIds' | 'openTo'>, value: string) { setDraft(d => ({ ...d, [key]: value })) }
   function submit(e: FormEvent) {
     e.preventDefault()
     if (busy) return
@@ -27,6 +28,7 @@ export function RegistrationPage({ initial, onBack, onContinue }: { initial: Pro
       <PhotoPicker max={1} label="Add profile photo" photos={isPhoto(draft.photo) ? [draft.photo] : []} onChange={photos => field('photo', photos[0] ?? '')} onBusyChange={setBusy} />
       <label className="field">Name <span aria-hidden="true">*</span><input name="name" autoComplete="name" placeholder="Your name" maxLength={80} value={draft.name} onChange={e => field('name', e.target.value)} required aria-required="true" /></label><p className="help">Required. This is the name your community will see.</p>
       <label className="field">Profession<select name="occupation" value={draft.occupation} onChange={e => field('occupation', e.target.value)} >    <option value="">Select your profession (optional)</option> {PROFESSIONS.map(profession => ( <option key={profession} value={profession}> {profession} </option>))} </select> </label> 
+      <fieldset className="member-interest-options"><legend>Open to</legend><div className="filter-chips">{CONTRIBUTIONS.map(type => <button type="button" className={`interest-button ${draft.openTo?.includes(type) ? 'selected' : ''}`} aria-pressed={draft.openTo?.includes(type) ?? false} key={type} onClick={() => setDraft(current => ({ ...current, openTo: current.openTo?.includes(type) ? current.openTo.filter(item => item !== type) : [...(current.openTo ?? []), type] }))}>{type}</button>)}</div></fieldset>
       <ContactPreferencePicker
         value={getContactOption(draft.contactPreference).value}
         onChange={contactPreference => {

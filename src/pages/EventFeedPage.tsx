@@ -20,7 +20,7 @@ export function EventFeedPage({ feed, onEvent }: { feed: FeedId; onEvent: (id: s
     document.addEventListener('visibilitychange', tick)
     return () => { window.clearInterval(timer); document.removeEventListener('visibilitychange', tick) }
   }, [])
-  const accessibleEvents = snapshot.events.filter(event => EVENT_TYPES[event.type].feed === feed && canReadEvent(event, snapshot.profile))
+  const accessibleEvents = snapshot.events.filter(event => EVENT_TYPES[event.type].feed === feed && canReadEvent(event, snapshot.profile, role))
   const mine = profileInterests(snapshot.profile)
   const options = uniqueInterests([...TOPICS, ...mine, ...accessibleEvents.flatMap(eventTopics)])
   const activeInterests = filterMode === 'mine' ? mine : selected
@@ -36,8 +36,7 @@ export function EventFeedPage({ feed, onEvent }: { feed: FeedId; onEvent: (id: s
     ? [{ id: 'mine', label: 'My interests', onRemove: clear }]
     : activeInterests.map(topic => ({ id: topic, label: topic, onRemove: () => toggleInterest(topic) }))
   return <>
-    <h1 className="feed-title">{FEEDS[feed].label}</h1>
-    <p className="intro">{FEEDS[feed].intro}</p>
+    <span className="eyebrow">{FEEDS[feed].eyebrow}</span><h1 className="feed-title">{FEEDS[feed].label}</h1><p className="intro">{FEEDS[feed].intro}</p>
     <div className="feed-filter-modes" role="group" aria-label="Event recommendations"><button type="button" aria-pressed={filterMode === 'all'} className={filterMode === 'all' ? 'selected' : ''} onClick={clear}>All events</button><button type="button" aria-pressed={filterMode === 'mine'} className={filterMode === 'mine' ? 'selected' : ''} onClick={() => setFilterMode('mine')}>My interests</button></div>
     <FilterPanel label="Interest filters" active={active} onClear={clear}>
       <p className="filter-instruction">Choose the interests you want to see. Match any selected interest.</p>

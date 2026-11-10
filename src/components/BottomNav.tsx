@@ -1,13 +1,12 @@
-import type { NavigationId } from '../types'
-import { FEEDS } from '../data/config'
+import type { NavigationId, Role, IconName } from '../types'
 import { Icon } from './Icon'
-
-const ITEMS = [
-  { id: 'official', label: FEEDS.official.label, icon: FEEDS.official.icon },
-  { id: 'social', label: FEEDS.social.label, icon: 'calendar' },
-  { id: 'members', label: 'Members', icon: 'people' },
-  { id: 'chats', label: 'Chatting', icon: 'chat' },
-] as const
-export function BottomNav({ active, onSelect }: { active: NavigationId | null; onSelect: (id: NavigationId) => void }) {
-  return <nav className="nav" aria-label="Community navigation">{ITEMS.map(item => <button type="button" key={item.id} className={`nav-${item.id} ${active === item.id ? 'active' : ''}`} aria-current={active === item.id ? 'page' : undefined} onClick={() => onSelect(item.id)}><span className="nav-icon"><Icon name={item.icon} /></span><span>{item.label}</span></button>)}</nav>
+const MEMBER_ITEMS: {id:NavigationId;label:string;icon:IconName}[] = [
+  {id:'official',label:'Opportunities',icon:'bag'}, {id:'social',label:'Social Events',icon:'calendar'}, {id:'create',label:'Create',icon:'plus'}, {id:'members',label:'Members',icon:'people'}, {id:'chats',label:'Chatting',icon:'chat'},
+]
+const ORGANIZER_ITEMS: {id:NavigationId;label:string;icon:IconName}[] = [
+  {id:'room',label:'Room',icon:'home'}, {id:'create',label:'Post',icon:'plus'}, {id:'find',label:'Find',icon:'search'}, {id:'asks',label:'Asks',icon:'notice'},
+]
+export function BottomNav({ active, onSelect, role }: { active: NavigationId|null; onSelect:(id:NavigationId)=>void; role:Role }) {
+  const items = role==='organizer' ? ORGANIZER_ITEMS : MEMBER_ITEMS
+  return <nav className={`nav v3-nav ${role==='organizer'?'organizer-nav':'member-nav'}`} aria-label="Community navigation">{items.map(item=><button type="button" className={active===item.id?'active':''} key={item.id} aria-current={active===item.id?'page':undefined} onClick={()=>onSelect(item.id)}><span className="nav-icon"><Icon name={item.icon}/></span><span>{item.label}</span></button>)}</nav>
 }

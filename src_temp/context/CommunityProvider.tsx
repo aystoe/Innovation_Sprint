@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react'
 import { CommunityContext } from './CommunityContext'
 import { SAMPLE_PROFILES } from '../data/profiles'
 import { EVENT_TYPES } from '../data/config'
+import { sendDemoMessage } from '../services/chat'
 import { canReadEvent, validateEvent } from '../services/eventRules'
 import { clearSnapshot, freshSnapshot, loadSnapshot, saveSnapshot } from '../services/localRepository'
 import { isEnded, newId } from '../utils/format'
@@ -48,6 +49,9 @@ export function CommunityProvider({ children }: PropsWithChildren) {
     if (ids.has(eventId)) ids.delete(eventId); else ids.add(eventId)
     saveProfile({ ...profile, attendedEventIds: [...ids] })
   }
+  function sendMessage(personId: string, text: string) {
+    commit(sendDemoMessage(current.current, SAMPLE_PROFILES[personId] ?? null, text))
+  }
   function resetDemo() {
     const next = freshSnapshot()
     current.current = next; setSnapshot(next); setRole('member')
@@ -55,5 +59,5 @@ export function CommunityProvider({ children }: PropsWithChildren) {
     const cleared = clearSnapshot()
     setStorageWarning(cleared || saveSnapshot(next) ? '' : 'Demo reset for this session only; browser storage could not be cleared.')
   }
-  return <CommunityContext.Provider value={{ snapshot, role, setRole, storageWarning, getPerson: id => id === 'me' ? snapshot.profile : SAMPLE_PROFILES[id] ?? null, saveProfile, publishEvent, addReview, toggleParticipation, resetDemo }}>{children}</CommunityContext.Provider>
+  return <CommunityContext.Provider value={{ snapshot, role, setRole, storageWarning, getPerson: id => id === 'me' ? snapshot.profile : SAMPLE_PROFILES[id] ?? null, saveProfile, publishEvent, addReview, toggleParticipation, sendMessage, resetDemo }}>{children}</CommunityContext.Provider>
 }

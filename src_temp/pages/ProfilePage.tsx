@@ -7,9 +7,9 @@ import { getContactOption } from '../data/contactPreferences'
 export function ProfilePage({ personId, onBack, onEdit, notify }: { personId: string; onBack: () => void; onEdit: () => void; notify: (message: string) => void }) {
   const { getPerson, saveProfile } = useCommunity()
   const person = getPerson(personId), own = personId === 'me'
-  if (!person) return <><BackButton onClick={onBack} /><div className="empty"><h2>No profile yet.</h2><p>Register to introduce yourself to the community.</p><button className="primary" onClick={onEdit}>Register</button></div></>
+  if (!person) return <><BackButton sticky onClick={onBack} /><div className="empty"><h2>No profile yet.</h2><p>Register to introduce yourself to the community.</p><button className="primary" onClick={onEdit}>Register</button></div></>
   const contactOption = getContactOption(person.contactPreference)
-  return <><BackButton onClick={onBack}>Back</BackButton>
+  return <><BackButton sticky onClick={onBack}>Back</BackButton>
   <h1>{person.name}</h1><p className="profile-profession">{person.occupation || 'Community member'}</p>
   <div className="profile-photo-wrapper">
     <img

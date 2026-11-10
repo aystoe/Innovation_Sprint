@@ -1,11 +1,11 @@
 /** Shared contracts: update these before changing data passed between pages. */
 export type FeedId = 'official' | 'social' | 'notices'
-export type NavigationId = Exclude<FeedId, 'notices'> | 'members' | 'leaderboard'
+export type NavigationId = Exclude<FeedId, 'notices'> | 'members' | 'chats'
 export type RankingPeriod = 'month' | 'semester'
 export type RankingRole = 'participant' | 'organizer'
 export type Role = 'member' | 'organizer'
 export type EventType = 'job' | 'cofounder' | 'official' | 'hobby' | 'alumni' | 'party' | 'announcement'
-export type IconName = 'leaf' | 'bag' | 'people' | 'notice' | 'pencil' | 'calendar' | 'pin' | 'back' | 'photo' | 'lock' | 'star' | 'bell' | 'trophy' | 'search' | 'filter'
+export type IconName = 'leaf' | 'bag' | 'people' | 'notice' | 'pencil' | 'calendar' | 'pin' | 'back' | 'photo' | 'lock' | 'star' | 'bell' | 'trophy' | 'search' | 'filter' | 'chat' | 'send'
 export type TraitKind = 'interests' | 'courses' | 'profession' | 'major'
 export type ContactPreference = 'gray' | 'yellow' | 'green'
 export interface AudienceTrait { kind: TraitKind; value: string }
@@ -40,12 +40,15 @@ export interface CommunityEvent {
   color: string
   art: string
   audience: Audience
+  image?: string
   topics?: string[]
   reviews: Review[]
 }
-export type EventInput = Pick<CommunityEvent, 'type' | 'title' | 'description' | 'location' | 'start' | 'end' | 'audience' | 'topics'>
-export interface Snapshot { version: 1; profile: Profile | null; events: CommunityEvent[] }
-export type BackPage = { kind: 'feed' } | { kind: 'members' } | { kind: 'leaderboard' } | { kind: 'detail'; eventId: string }
+export type EventInput = Pick<CommunityEvent, 'type' | 'title' | 'description' | 'location' | 'start' | 'end' | 'audience' | 'topics' | 'image'>
+export interface ChatMessage { id: string; sender: 'me' | 'them'; text: string; createdAt: string; automated?: boolean }
+export interface Conversation { personId: string; messages: ChatMessage[] }
+export interface Snapshot { version: 1; profile: Profile | null; events: CommunityEvent[]; conversations: Conversation[] }
+export type BackPage = { kind: 'feed' } | { kind: 'chats' } | { kind: 'chat'; personId: string } | { kind: 'members' } | { kind: 'leaderboard' } | { kind: 'detail'; eventId: string }
 export type Page = BackPage
   | { kind: 'create' }
   | { kind: 'profile'; personId: string; backTo: BackPage }

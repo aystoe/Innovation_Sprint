@@ -2,6 +2,7 @@ import { useCommunity } from '../context/CommunityContext'
 import { SAMPLE_PROFILES } from '../data/profiles'
 import { searchChatMembers } from '../services/chat'
 import { photoSource } from '../utils/avatar'
+import { MemberRequests } from '../components/MemberRequests'
 import { Icon } from '../components/Icon'
 
 export function ChatsPage({ query, onQueryChange, onChat }: { query: string; onQueryChange: (query: string) => void; onChat: (personId: string) => void }) {
@@ -15,6 +16,7 @@ export function ChatsPage({ query, onQueryChange, onChat }: { query: string; onQ
     <label className="chat-search-label" htmlFor="chat-search">Search people</label><div className="member-search-input chat-search"><Icon name="search" /><input id="chat-search" type="search" autoComplete="off" placeholder="Search by name…" value={query} onChange={event => onQueryChange(event.target.value)} /></div>
     {query && <button type="button" className="clear-name" onClick={() => onQueryChange('')}>Clear search</button>}
     <p className="chat-demo-note">Demo chats · Replies are automatic.</p>
+    <MemberRequests />
     {!!existing.length && <><div className="section-head"><strong>Conversations</strong><span>{existing.length}</span></div><ul className="chat-list">{existing.map(conversation => {
       const person = SAMPLE_PROFILES[conversation.personId], last = conversation.messages[conversation.messages.length - 1]
       return <li key={person.id}><button type="button" className="chat-person-row" onClick={() => onChat(person.id)}><img src={photoSource(person.photo)} alt="" /><span className="chat-person-copy"><strong>{person.name}</strong><span>{last.sender === 'me' ? 'You: ' : ''}{last.text}</span></span><time dateTime={last.createdAt}>{new Date(last.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</time></button></li>

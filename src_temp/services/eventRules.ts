@@ -1,3 +1,4 @@
+import { isPhoto } from '../utils/avatar'
 import { EVENT_TYPES } from '../data/config'
 import type { AudienceTrait, CommunityEvent, EventInput, Profile, Role, TraitKind } from '../types'
 import { splitTraits } from '../utils/format'
@@ -28,6 +29,7 @@ export function canReadEvent(
   return matchesAudience(event, profile)
 }
 export function validateEvent(input: EventInput, role: Role): string | null {
+  if (input.image && !isPhoto(input.image)) return 'Please choose a valid event photo.'
   if (!Object.hasOwn(EVENT_TYPES, input.type)) return 'Please choose an event type.'
   if (input.type === 'announcement' && role !== 'organizer') return 'Only organizers can publish announcements.'
   if (!input.title.trim() || !input.description.trim() || !input.location.trim() || !Number.isFinite(Date.parse(input.start)) || !Number.isFinite(Date.parse(input.end))) return 'Please complete every required field.'
