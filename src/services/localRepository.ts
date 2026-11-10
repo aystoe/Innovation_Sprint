@@ -1,6 +1,7 @@
 import { createSeedEvents } from '../data/events'
 import { freshOrganizerState, CONTRIBUTIONS } from './organizer'
 import { EVENT_TYPES } from '../data/config'
+import { UPCOMING_EVENTS } from '../data/upcomingEvents'
 import type { Snapshot, Profile, CommunityEvent, Review, AudienceTrait, Conversation } from '../types'
 
 /** Replace this adapter with API calls when a backend is added. UI code stays unchanged. */
@@ -34,8 +35,43 @@ export function loadSnapshot(): { snapshot: Snapshot; warning: string } {
     if (!raw) return { snapshot: freshSnapshot(), warning: '' }
     const v: unknown = JSON.parse(raw)
     if (!record(v) || v.version !== 1 || !(v.profile === null || validProfile(v.profile)) || !Array.isArray(v.events) || !v.events.every(validEvent)) throw new Error('Invalid saved data')
+      const demoIds = new Set([
+        'social-1',
+        'social-2',
+        'social-3',
+        'official-1',
+        'official-2',
+        'official-3',
+        'notice-1',
+        'notice-2',
+      ])
+
+      const demoDates = new Map(
+        createSeedEvents()
+          .filter(event => demoIds.has(event.id))
+          .map(event => [event.id, event])
+      )
+
+      const savedEvents = (v.events as CommunityEvent[]).map(event => {
+        const updated = demoDates.get(event.id)
+
+        return updated
+          ? {
+              ...event,
+              start: updated.start,
+              end: updated.end,
+            }
+          : event
+      })
+
+    const mergedEvents = [
+      ...UPCOMING_EVENTS.filter(
+        upcoming => !savedEvents.some(saved => saved.id === upcoming.id)
+      ),
+      ...savedEvents,
+    ]
     const chatsValid = v.conversations === undefined || (Array.isArray(v.conversations) && v.conversations.every(validConversation) && new Set(v.conversations.map(c => c.personId)).size === v.conversations.length)
-    return { snapshot: { ...v, organizer: validOrganizer(v.organizer) ? v.organizer : freshOrganizerState(), conversations: chatsValid ? (v.conversations ?? []) : [] } as unknown as Snapshot, warning: chatsValid ? '' : 'Saved chats could not be loaded. Your profile and events are unchanged.' }
+    return { snapshot: { ...v, organizer: validOrganizer(v.organizer) ? v.organizer : freshOrganizerState(), conversations: chatsValid ? (v.conversations ?? []) : [],  events: mergedEvents,} as unknown as Snapshot, warning: chatsValid ? '' : 'Saved chats could not be loaded. Your profile and events are unchanged.' }
   } catch { return { snapshot: freshSnapshot(), warning: 'Saved demo data could not be loaded. Starting with sample data.' } }
 }
 export function saveSnapshot(snapshot: Snapshot): boolean {

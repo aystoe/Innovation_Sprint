@@ -14,6 +14,12 @@ export const V3_IMAGES = {
 export const DEFAULT_EVENT_IMAGE = V3_IMAGES.workshop
 export function eventImage(event: Pick<CommunityEvent, 'id' | 'type' | 'image'>): string {
   if (event.image && isPhoto(event.image)) return event.image
-  const samples: Record<string,string> = { 'social-1':V3_IMAGES.laugh, 'social-2':V3_IMAGES.outdoor, 'social-3':V3_IMAGES.social, 'official-1':V3_IMAGES.team, 'official-2':V3_IMAGES.team, 'official-3':V3_IMAGES.talk }
+  const samples: Record<string,string> = { 
+    'public-makers-pd-2026': V3_IMAGES.workshop,
+    'bmw-mm-workshop-2026': V3_IMAGES.build,
+    'start-and-spread-2026': V3_IMAGES.social,
+    'social-1':V3_IMAGES.laugh, 
+    'social-2':V3_IMAGES.outdoor, 'social-3':V3_IMAGES.social, 'official-1':V3_IMAGES.team, 'official-2':V3_IMAGES.team, 'official-3':V3_IMAGES.talk 
+  }
   return samples[event.id] ?? (event.type==='party' ? V3_IMAGES.social : event.type==='official' ? V3_IMAGES.talk : ['job','cofounder'].includes(event.type) ? V3_IMAGES.team : DEFAULT_EVENT_IMAGE)
 }

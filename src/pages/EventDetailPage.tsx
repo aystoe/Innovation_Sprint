@@ -3,12 +3,35 @@ import { useCommunity } from '../context/CommunityContext'
 import { EVENT_TYPES } from '../data/config'
 import { eventTopics } from '../services/eventInterests'
 import { audienceLabel, canReadEvent } from '../services/eventRules'
-import { isEnded, dateTime } from '../utils/format'
+import { isEnded, dateTime, isWebUrl } from '../utils/format'
 import { photoSource } from '../utils/avatar'
 import { BackButton } from '../components/BackButton'
 import { EventArtwork } from '../components/EventArtwork'
 import { ReviewCard } from '../components/ReviewCard'
 import { Icon } from '../components/Icon'
+
+function renderDescription(text: string) {
+  return text.split(/(https?:\/\/[^\s<>"']+)/g).map((part, index) =>
+    isWebUrl(part) ? (
+      <a
+        key={index}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          color: '#0600ff',
+          textDecoration: 'underline',
+          overflowWrap: 'anywhere',
+        }}
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    )
+  )
+}
+
 export function EventDetailPage({ eventId, onBack, onReview, onRegister, notify }: { eventId: string; onBack: () => void; onReview: () => void; onRegister: () => void; notify: (message: string) => void }) {
   const { snapshot, getPerson, toggleParticipation, role } = useCommunity()
   const [, tick] = useState(0)
@@ -28,7 +51,7 @@ export function EventDetailPage({ eventId, onBack, onReview, onRegister, notify 
     <p className="audience-info">Visible to: {audienceLabel(event)}</p>
     {!['job', 'cofounder', 'announcement'].includes(event.type) && <button type="button" className={`primary join-button ${joined ? 'is-joined' : ''}`} aria-pressed={!!joined} onClick={join}>{joined ? 'Joined · Leave event' : past ? 'I attended this event' : 'Join event'}</button>}
     <div className="filter-chips" aria-label="Event interests">{eventTopics(event).map(topic => <span className="interest-button" key={topic}>{topic}</span>)}</div>
-    <p className="detail-copy">{event.description}</p>
+    <p className="detail-copy">{renderDescription(event.description)}</p>
     {past && <><div className="ended-banner">This event has ended. Share your memories and feedback with the community.</div><button type="button" className="primary" onClick={onReview}><Icon name="star" />Add a review</button></>}
     <div className="section-head"><strong>Community reviews</strong><span>{event.reviews.length} {event.reviews.length === 1 ? 'review' : 'reviews'}</span></div>
     {event.reviews.map(review => <ReviewCard key={review.id} review={review} />)}
