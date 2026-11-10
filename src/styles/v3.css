@@ -194,3 +194,4 @@ h1 { font-size:30px; line-height:1; letter-spacing:-.01em; }
 .steps span { background:#ddd; }
 .storage-warning { background:#fff1d6; color:#7a4500; }
 .contact-option input,.trait-option input { accent-color:#0600ff; }
+.header-trophy {  display: none !important;}
