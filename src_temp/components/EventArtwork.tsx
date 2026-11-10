@@ -1,6 +1,6 @@
 import type { CommunityEvent } from '../types'
-import { EVENT_TYPES } from '../data/config'
-import { Icon } from './Icon'
+import { eventImage, DEFAULT_EVENT_IMAGE } from '../services/eventImages'
 export function EventArtwork({ event, detail = false, ended = false }: { event: CommunityEvent; detail?: boolean; ended?: boolean }) {
-  return <div className={`card-art ${detail ? 'detail-art' : ''} ${ended ? 'ended-art' : event.color}`}><span className="art-title">{event.art || event.title}</span><Icon name={EVENT_TYPES[event.type].icon} /></div>
+  const date = new Date(event.start)
+  return <div className={`event-photo ${detail ? 'detail-photo' : ''}`}><img src={eventImage(event)} alt={`Image for ${event.title}`} onError={e=>{ if(e.currentTarget.src!==DEFAULT_EVENT_IMAGE)e.currentTarget.src=DEFAULT_EVENT_IMAGE }} /><span className="photo-date"><b>{date.getDate()}</b><span>{date.toLocaleDateString('en-GB',{month:'short'})}</span></span>{ended && <span className="photo-past">Past</span>}</div>
 }

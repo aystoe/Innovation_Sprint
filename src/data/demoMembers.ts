@@ -9,7 +9,8 @@ const NAMES = [
   'Chloe Laurent', 'Felix Wagner', 'Nora Hoffmann', 'Leo Becker', 'Hannah Kim', 'Oscar Lindberg',
   'Freya Jensen', 'Arthur Silva', 'Layla Hassan', 'Hugo Moreau', 'Zoe Papadopoulos', 'Matteo Ricci',
   'Aisha Khan', 'Daniel Park', 'Yuna Choi', 'Gabriel Santos', 'Elena Petrova', 'David Okafor',
-  'Anika Sharma', 'Louis Bernard', 'Clara Neumann', 'Maximilian Wolf', 'Sakura Tanaka', 'Wei Zhang',
+  'Anika Sharma', 'Louis Bernard', 'Clara Neumann', 'Maximilian Wolf', '김민준', '이서연',
+  '박지우', '정수빈', 'Sakura Tanaka', 'Wei Zhang',
 ]
 const PROFESSIONS = ['Student', 'Alumni', 'Founder', 'Educator', 'Organizer']
 const MAJORS = ['Computer Science', 'Mechanical Engineering', 'Management', 'Industrial Engineering', 'Design', 'Environmental Science', 'Aerospace Engineering', 'Economics']

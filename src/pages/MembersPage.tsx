@@ -9,6 +9,7 @@ import { splitTraits } from '../utils/format'
 import { FilterPanel } from '../components/FilterPanel'
 import { InterestPicker } from '../components/InterestPicker'
 import { Icon } from '../components/Icon'
+import { TEAM_PROFILES } from '../data/teamProfiles'
 
 interface Props {
   filters: MemberFilters
@@ -19,7 +20,15 @@ export function MembersPage({ filters, onFiltersChange, onProfile }: Props) {
   const { snapshot } = useCommunity()
   const profiles = [...Object.values(SAMPLE_PROFILES), ...(snapshot.profile ? [snapshot.profile] : [])]
   const options = memberOptions(profiles)
-  const members = filterMembers(profiles, filters)
+  const teamOrder = new Map(
+    TEAM_PROFILES.map((person, index) => [person.id, index])
+  )
+
+  const members = filterMembers(profiles, filters).sort(
+    (a, b) =>
+      (teamOrder.get(a.id) ?? TEAM_PROFILES.length) -
+      (teamOrder.get(b.id) ?? TEAM_PROFILES.length)
+  )
   function update(patch: Partial<MemberFilters>) { onFiltersChange({ ...filters, ...patch }) }
   function toggleInterest(interest: string) {
     update({ interests: filters.interests.includes(interest) ? filters.interests.filter(value => value !== interest) : [...filters.interests, interest] })

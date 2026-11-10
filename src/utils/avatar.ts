@@ -4,6 +4,16 @@ export function avatarImage(color = '#d9e5c6', shirt = '#567455') {
 }
 export const isPhoto = (value: unknown): boolean => typeof value === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(value)
 export function photoSource(photo?: string): string {
-  if (typeof photo === 'string' && (isPhoto(photo) || photo.startsWith('data:image/svg+xml;charset=utf-8,'))) return photo
+  if (
+    typeof photo === 'string' &&
+    (
+      isPhoto(photo) ||
+      photo.startsWith('data:image/svg+xml;charset=utf-8,') ||
+      photo.startsWith('/team/')
+    )
+  ) {
+    return photo
+  }
+
   return avatarImage()
 }

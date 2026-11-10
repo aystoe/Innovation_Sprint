@@ -1,6 +1,7 @@
 import type { Profile } from '../types'
 import { DEMO_MEMBERS } from './demoMembers'
 import { avatarImage } from '../utils/avatar'
+import { TEAM_PROFILES } from './teamProfiles'
 
 const rawProfiles = {
 maya:{name:'Maya Chen',occupation:'Co-founder · RePack Studio',bio:'I turn circular economy ideas into practical products. Always happy to exchange ideas over coffee and help early-stage teams find their next experiment.',interests:'Sustainability, Entrepreneurship, Robotics',major:'Industrial Engineering',courses:'Innovation Sprint 26w, Manage and More 25s',photo:avatarImage(),attendedEventIds:['social-3','official-3','social-1']},
@@ -9,6 +10,13 @@ alex:{name:'Alex Morgan',occupation:'Software Engineer',bio:'I enjoy robotics, p
 organizer:{name:'Carl Meyer',occupation:'Programme Coordinator',bio:'Helping our community learn, build and stay connected. I organize programme sessions, alumni meetups and opportunities to share experience.',interests:'Networking, Workshop, Entrepreneurship',major:'Management',courses:'Innovation Sprint 26w',photo:avatarImage('#d8e5e9','#60848c'),attendedEventIds:['social-3','official-3']}
 }
 
-export const SAMPLE_PROFILES: Record<string, Profile> = Object.fromEntries([...Object.entries(rawProfiles).map(([id, value]) => [id, { ...value, id, social: '', socialOther: '', topics: [], contactPreference: 'green', openTo: ['Speaker', 'Mentor', 'Feedback'] }] as const), ...DEMO_MEMBERS.map(profile => [profile.id, profile] as const)])
+const BASE_PROFILES: Record<string, Profile> = Object.fromEntries([...Object.entries(rawProfiles).map(([id, value]) => [id, { ...value, id, social: '', socialOther: '', topics: [], contactPreference: 'green', openTo: ['Speaker', 'Mentor', 'Feedback'] }] as const), ...DEMO_MEMBERS.map(profile => [profile.id, profile] as const)])
+export const SAMPLE_PROFILES: Record<string, Profile> = {
+  ...BASE_PROFILES,
+  ...Object.fromEntries(
+    TEAM_PROFILES.map(person => [person.id, person])
+  ),
+}
+
 
 export const emptyProfile = (): Profile => ({ id: 'me', name: '', occupation: '', bio: '', major: '', interests: '', courses: '', photo: '', social: '', socialOther: '', topics: [], attendedEventIds: [] })

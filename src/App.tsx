@@ -3,7 +3,6 @@ import { useCommunity } from './context/CommunityContext'
 import { emptyProfile } from './data/profiles'
 import { EVENT_TYPES } from './data/config'
 import type { BackPage, FeedId, Page, Profile } from './types'
-import { Avatar } from './components/Avatar'
 import { BottomNav } from './components/BottomNav'
 import { Icon } from './components/Icon'
 import { ResetDialog } from './components/ResetDialog'
@@ -69,7 +68,7 @@ export default function App() {
     case 'onboarding': content = <OnboardingPage profile={registrationDraft} editing={!!store.snapshot.profile} onBack={draft => { setRegistrationDraft(draft); setPage({ kind: 'register' }) }} onFinish={finishRegistration} />; break
   }
   return <div className={`phone role-${store.role}`}>
-    <header className="brand"><div className="wordmark"><i aria-hidden="true" />Common Ground</div>{store.role==='organizer' && !formFlow && <span className="organizer-badge">Organizer</span>}{!formFlow && <div className="header-actions"><button type="button" className={`header-trophy ${navigationPage.kind === 'leaderboard' ? 'selected' : ''}`} aria-label="View leaderboard" title="Leaderboard" aria-pressed={navigationPage.kind === 'leaderboard'} onClick={() => setPage({ kind: 'leaderboard' })}><Icon name="trophy" /></button>{store.snapshot.profile ? <Avatar person={store.snapshot.profile} onClick={() => openProfile('me')} label="View your profile" /> : <button type="button" className="register-button" onClick={startRegistration}>Register</button>}</div>}</header>
+    <header className="brand"><div className="wordmark"><i aria-hidden="true" />Common Ground</div>{store.role==='organizer' && !formFlow && <span className="organizer-badge">Organizer</span>}{!formFlow && <div className="header-actions"><button type="button" className={`header-trophy ${navigationPage.kind === 'leaderboard' ? 'selected' : ''}`} aria-label="View leaderboard" title="Leaderboard" aria-pressed={navigationPage.kind === 'leaderboard'} onClick={() => setPage({ kind: 'leaderboard' })}><Icon name="trophy" /></button>{store.snapshot.profile ? <button type="button" className="my-profile-button" onClick={() => openProfile('me')}>My profile</button> : <button type="button" className="register-button" onClick={startRegistration}>Register</button>}</div>}</header>
     {!formFlow && <div className="userbar"><div className="role-switch" role="group" aria-label="Demo perspective">{(['member','organizer'] as const).map(role=><button type="button" key={role} aria-pressed={store.role===role} onClick={()=>{store.setRole(role);setPage({kind:role==='organizer'?'room':'feed'})}}>{role==='organizer'?'Organizer':'Member'}</button>)}</div><button className="reset-button" type="button" onClick={()=>setShowReset(true)}>Reset demo</button></div>}
     {store.storageWarning && <p className="storage-warning" role="status">{store.storageWarning}</p>}
     <main className={`page ${page.kind === 'chat' ? 'chat-page' : ''}`} ref={main} key={page.kind}>{content}</main>

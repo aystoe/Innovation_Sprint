@@ -9,8 +9,7 @@ const NAMES = [
   'Chloe Laurent', 'Felix Wagner', 'Nora Hoffmann', 'Leo Becker', 'Hannah Kim', 'Oscar Lindberg',
   'Freya Jensen', 'Arthur Silva', 'Layla Hassan', 'Hugo Moreau', 'Zoe Papadopoulos', 'Matteo Ricci',
   'Aisha Khan', 'Daniel Park', 'Yuna Choi', 'Gabriel Santos', 'Elena Petrova', 'David Okafor',
-  'Anika Sharma', 'Louis Bernard', 'Clara Neumann', 'Maximilian Wolf', '김민준', '이서연',
-  '박지우', '정수빈', 'Sakura Tanaka', 'Wei Zhang',
+  'Anika Sharma', 'Louis Bernard', 'Clara Neumann', 'Maximilian Wolf', 'Sakura Tanaka', 'Wei Zhang',
 ]
 const PROFESSIONS = ['Student', 'Alumni', 'Founder', 'Educator', 'Organizer']
 const MAJORS = ['Computer Science', 'Mechanical Engineering', 'Management', 'Industrial Engineering', 'Design', 'Environmental Science', 'Aerospace Engineering', 'Economics']
@@ -18,7 +17,7 @@ const INTERESTS = ['Robotics', 'AI & Technology', 'Sustainability', 'Entrepreneu
 const COURSES = ['Innovation Sprint 26w', 'Innovation Sprint 25w', 'Tech Challenge 26w', 'Tech Challenge 25w', 'Manage and More 25s', 'Manage and More 26s']
 const COLORS = [['#e2e9d5', '#73815f'], ['#e9d9cb', '#9c7b65'], ['#e2ddef', '#7d7197'], ['#d8e5e9', '#60848c'], ['#f1dce0', '#a1717a']]
 
-export const DEMO_MEMBERS: Profile[] = NAMES.map((name, i) => {
+export const DEMO_MEMBERS: Profile[] = NAMES.map((name, i): Profile => {
   const interests = [INTERESTS[i % INTERESTS.length], INTERESTS[(i + 3) % INTERESTS.length], INTERESTS[(i + 7) % INTERESTS.length]]
   const [background, foreground] = COLORS[i % COLORS.length]
   return {
@@ -28,6 +27,7 @@ export const DEMO_MEMBERS: Profile[] = NAMES.map((name, i) => {
     interests: interests.join(', '), topics: [interests[0], interests[2]],
     courses: [COURSES[i % COURSES.length], COURSES[(i + 2) % COURSES.length]].join(', '),
     photo: avatarImage(background, foreground), social: '', socialOther: '',
+    openTo: i % 5 === 2 ? ['Speaker', 'Jury', 'Mentor'] : i % 2 ? ['Mentor', 'Feedback'] : ['Feedback'],
     contactPreference: (['green', 'yellow', 'gray'] as const)[i % 3],
     attendedEventIds: i % 4 === 0 ? ['social-3', 'official-3'] : i % 4 === 1 ? ['social-3'] : i % 4 === 2 ? ['official-3'] : [],
   }

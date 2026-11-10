@@ -194,4 +194,11 @@ h1 { font-size:30px; line-height:1; letter-spacing:-.01em; }
 .steps span { background:#ddd; }
 .storage-warning { background:#fff1d6; color:#7a4500; }
 .contact-option input,.trait-option input { accent-color:#0600ff; }
-.header-trophy {  display: none !important;}
+
+/* Profile entry and the original course-tag treatment. */
+.my-profile-button { border:2px solid #000; background:#000; color:#fff; padding:10px 12px; min-height:42px; font:700 14px var(--body); white-space:nowrap; }
+.my-profile-button:hover { background:#0600ff; border-color:#0600ff; }
+.phone .course-list { display:flex; flex-wrap:wrap; gap:6px; }
+.phone .course-pill { padding:6px 9px; background:#ede9f2; color:#776588; border:0; border-radius:8px; font:400 13px/1.5 var(--body); text-transform:none; letter-spacing:normal; overflow-wrap:anywhere; max-width:100%; }
+/* Keep leaderboard code available while hiding its entry point. */
+.header-trophy { display:none !important; }

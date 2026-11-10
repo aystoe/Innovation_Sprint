@@ -20,8 +20,10 @@ export function matchesAudience(event: CommunityEvent, profile: Profile | null):
 }
 export function canReadEvent(
   event: CommunityEvent,
-  profile: Profile | null
+  profile: Profile | null,
+  role?: Role
 ) {
+  if (role === 'organizer') return true
   if (event.type === 'announcement') {
     return true
   }

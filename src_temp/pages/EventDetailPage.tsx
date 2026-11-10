@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useCommunity } from '../context/CommunityContext'
 import { EVENT_TYPES } from '../data/config'
-import { eventImage, DEFAULT_EVENT_IMAGE } from '../services/eventImages'
 import { eventTopics } from '../services/eventInterests'
 import { audienceLabel, canReadEvent } from '../services/eventRules'
 import { isEnded, dateTime } from '../utils/format'
@@ -11,20 +10,20 @@ import { EventArtwork } from '../components/EventArtwork'
 import { ReviewCard } from '../components/ReviewCard'
 import { Icon } from '../components/Icon'
 export function EventDetailPage({ eventId, onBack, onReview, onRegister, notify }: { eventId: string; onBack: () => void; onReview: () => void; onRegister: () => void; notify: (message: string) => void }) {
-  const { snapshot, getPerson, toggleParticipation } = useCommunity()
+  const { snapshot, getPerson, toggleParticipation, role } = useCommunity()
   const [, tick] = useState(0)
   useEffect(() => { const timer = window.setInterval(() => tick(n => n + 1), 30_000); return () => clearInterval(timer) }, [])
   const event = snapshot.events.find(e => e.id === eventId)
-  if (!event || !canReadEvent(event, snapshot.profile)) return <><BackButton sticky onClick={onBack} /><div className="empty"><h2>This event is unavailable.</h2><p>It may be restricted to another audience.</p></div></>
+  if (!event || !canReadEvent(event, snapshot.profile, role)) return <><BackButton sticky onClick={onBack} /><div className="empty"><h2>This event is unavailable.</h2><p>It may be restricted to another audience.</p></div></>
   const past = isEnded(event), author = getPerson(event.authorId), joined = snapshot.profile?.attendedEventIds.includes(event.id)
   function join() {
     if (!snapshot.profile) { notify('Register your profile to join events.'); onRegister(); return }
     try { toggleParticipation(eventId); notify(joined ? 'You have left this event.' : 'Event added to your participation history.') } catch (e) { notify(e instanceof Error ? e.message : 'Could not update participation.') }
   }
-  return <><BackButton sticky onClick={onBack} /><EventArtwork event={event} detail ended={past} />
-    <section className="event-detail-summary"><div className="event-detail-info"><div className="topline"><span className="tag">{EVENT_TYPES[event.type].label}</span><span className="badge">{past ? 'Ended' : 'Open'}</span></div><h1>{event.title}</h1>
+  return <><BackButton sticky onClick={onBack} /><EventArtwork event={event} detail ended={past} /><div className="blackbar event-title-bar">{event.title}</div>
+    <section className="event-detail-summary"><div className="event-detail-info"><div className="topline"><span className="tag">{EVENT_TYPES[event.type].label}</span><span className="badge">{past ? 'Ended' : 'Open'}</span></div>
     <div className="meta"><Icon name="calendar" />{dateTime(event.start)}</div><div className="meta"><Icon name="calendar" />Ends: {dateTime(event.end)}</div><div className="meta"><Icon name="pin" />{event.location}</div>
-    </div><img className="event-detail-photo" src={eventImage(event)} alt={`Image for ${event.title}`} onError={e => { if (e.currentTarget.src !== DEFAULT_EVENT_IMAGE) e.currentTarget.src = DEFAULT_EVENT_IMAGE }} /></section>
+    </div></section>
     <div className="detail-person organizer-info"><img src={photoSource(author?.photo)} alt="" /><div><span className="organizer-label">Organizer</span><strong>{author?.name ?? event.author}</strong></div></div>
     <p className="audience-info">Visible to: {audienceLabel(event)}</p>
     {!['job', 'cofounder', 'announcement'].includes(event.type) && <button type="button" className={`primary join-button ${joined ? 'is-joined' : ''}`} aria-pressed={!!joined} onClick={join}>{joined ? 'Joined · Leave event' : past ? 'I attended this event' : 'Join event'}</button>}
