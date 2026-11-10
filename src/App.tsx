@@ -7,6 +7,8 @@ import { Avatar } from './components/Avatar'
 import { BottomNav } from './components/BottomNav'
 import { Icon } from './components/Icon'
 import { ResetDialog } from './components/ResetDialog'
+import { ChatsPage } from './pages/ChatsPage'
+import { ChatPage } from './pages/ChatPage'
 import { MembersPage } from './pages/MembersPage'
 import { emptyMemberFilters } from './services/memberDirectory'
 import { LeaderboardPage } from './pages/LeaderboardPage'
@@ -26,6 +28,8 @@ export default function App() {
   const [registrationDraft, setRegistrationDraft] = useState<Profile>(emptyProfile)
   const [toast, setToast] = useState('')
   const [memberFilters, setMemberFilters] = useState(emptyMemberFilters)
+  const [chatQuery, setChatQuery] = useState('')
+  const [chatDrafts, setChatDrafts] = useState<Record<string, string>>({})
   const [showReset, setShowReset] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const main = useRef<HTMLElement>(null)
@@ -40,13 +44,18 @@ export default function App() {
   function startRegistration() { setRegistrationDraft(store.snapshot.profile ? structuredClone(store.snapshot.profile) : emptyProfile()); setPage({ kind: 'register' }) }
   function openProfile(personId: string) {
     if (personId === 'me' && !store.snapshot.profile) { startRegistration(); return }
-    const backTo: BackPage = page.kind === 'detail' ? page : page.kind === 'profile' ? page.backTo : (page.kind === 'leaderboard' || page.kind === 'members') ? page : { kind: 'feed' }
+    const backTo: BackPage = page.kind === 'detail' ? page : page.kind === 'profile' ? page.backTo : (page.kind === 'leaderboard' || page.kind === 'members' || page.kind === 'chat' || page.kind === 'chats') ? page : { kind: 'feed' }
     setPage({ kind: 'profile', personId, backTo })
   }
+  function openChat(personId: string) { if (personId !== 'me' && store.getPerson(personId)) setPage({ kind: 'chat', personId }) }
   function finishRegistration(profile: Profile) { store.saveProfile(profile); backToFeed(); notify('You’re all set. Your profile and preferences are saved.') }
-  function resetDemo() { store.resetDemo(); setMemberFilters(emptyMemberFilters()); setRegistrationDraft(emptyProfile()); setFeed('social'); setShowReset(false); backToFeed(); notify('Demo reset. Start again with Register.') }
+  function resetDemo() { store.resetDemo(); setChatQuery(''); setChatDrafts({}); setMemberFilters(emptyMemberFilters()); setRegistrationDraft(emptyProfile()); setFeed('social'); setShowReset(false); backToFeed(); notify('Demo reset. Start again with Register.') }
+  const navigationPage = page.kind === 'profile' ? page.backTo : page
+  const activeNav = navigationPage.kind === 'leaderboard' ? null : navigationPage.kind === 'chat' || navigationPage.kind === 'chats' ? 'chats' : navigationPage.kind === 'members' ? 'members' : feed === 'notices' ? 'social' : feed
   let content
   switch (page.kind) {
+    case 'chats': content = <ChatsPage query={chatQuery} onQueryChange={setChatQuery} onChat={openChat} />; break
+    case 'chat': content = <ChatPage key={page.personId} personId={page.personId} draft={chatDrafts[page.personId] ?? ''} onDraftChange={draft => setChatDrafts(current => ({ ...current, [page.personId]: draft }))} onBack={() => setPage({ kind: 'chats' })} onProfile={openProfile} />; break
     case 'members': content = <MembersPage filters={memberFilters} onFiltersChange={setMemberFilters} onProfile={openProfile} />; break
     case 'leaderboard': content = <LeaderboardPage onProfile={openProfile} />; break
     case 'feed': content = <EventFeedPage feed={feed} onEvent={eventId => setPage({ kind: 'detail', eventId })} />; break
@@ -58,13 +67,13 @@ export default function App() {
     case 'onboarding': content = <OnboardingPage profile={registrationDraft} editing={!!store.snapshot.profile} onBack={draft => { setRegistrationDraft(draft); setPage({ kind: 'register' }) }} onFinish={finishRegistration} />; break
   }
   return <div className="phone">
-    <div className="status"><span>9:41</span><svg viewBox="0 0 50 18" role="img" aria-label="Connected, full battery"><path d="M2 14v-3m4 3V8m4 6V5m4 9V2M21 6a7 7 0 0 1 10 0m-8 3a4 4 0 0 1 6 0m-3 3v1" /><rect x="36" y="4" width="11" height="10" rx="2" /><path d="M49 7v4m-10-4h5v4h-5z" /></svg></div>
-    <header className="brand"><div className="wordmark"><Icon name="leaf" />Common Ground</div>{!formFlow && <div className="header-actions"><Avatar person={store.snapshot.profile} onClick={() => openProfile('me')} label="View your profile" /><button type="button" className="register-button" onClick={startRegistration}>{store.snapshot.profile ? 'Edit profile' : 'Register'}</button></div>}</header>
+    <header className="brand"><div className="wordmark"><Icon name="leaf" />Common Ground</div>{!formFlow && <div className="header-actions"><button type="button" className={`header-trophy ${navigationPage.kind === 'leaderboard' ? 'selected' : ''}`} aria-label="View leaderboard" title="Leaderboard" aria-pressed={navigationPage.kind === 'leaderboard'} onClick={() => setPage({ kind: 'leaderboard' })}><Icon name="trophy" /></button>{store.snapshot.profile ? <Avatar person={store.snapshot.profile} onClick={() => openProfile('me')} label="View your profile" /> : <button type="button" className="register-button" onClick={startRegistration}>Register</button>}</div>}</header>
     {!formFlow && <div className="userbar"><label className="role-box">Demo role <select aria-label="Demo role" value={store.role} onChange={e => { store.setRole(e.target.value === 'organizer' ? 'organizer' : 'member'); backToFeed() }}><option value="member">Member</option><option value="organizer">Organizer</option></select></label><button className="reset-button" type="button" onClick={() => setShowReset(true)}>Reset demo</button></div>}
     {store.storageWarning && <p className="storage-warning" role="status">{store.storageWarning}</p>}
-    <main className="page" ref={main} key={page.kind}>{content}</main>
+    <main className={`page ${page.kind === 'chat' ? 'chat-page' : ''}`} ref={main} key={page.kind}>{content}</main>
     {page.kind === 'feed' && !(feed === 'notices' && store.role !== 'organizer') && <button type="button" className="fab" aria-label="Create an event" onClick={() => setPage({ kind: 'create' })}><Icon name="pencil" /></button>}
-    {!formFlow && <BottomNav active={page.kind === 'members' || (page.kind === 'profile' && page.backTo.kind === 'members') ? 'members' : page.kind === 'leaderboard' || (page.kind === 'profile' && page.backTo.kind === 'leaderboard') ? 'leaderboard' : feed === 'notices' ? 'social' : feed} onSelect={id => { if (id === 'members' || id === 'leaderboard') setPage({ kind: id }); else { setFeed(id); backToFeed() } }} />}
+    {page.kind === 'profile' && page.personId !== 'me' && store.getPerson(page.personId) && <button type="button" className="fab profile-chat-button" aria-label={`Chat with ${store.getPerson(page.personId)?.name}`} onClick={() => openChat(page.personId)}><Icon name="chat" /><span>Chat</span></button>}
+    {!formFlow && <BottomNav active={activeNav} onSelect={id => { if (id === 'members' || id === 'chats') setPage({ kind: id }); else { setFeed(id); backToFeed() } }} />}
     <div className="homebar" aria-hidden="true" /><div className={`toast ${toast ? 'show' : ''}`} role="status" aria-live="polite">{toast}</div>
     {showReset && <ResetDialog onConfirm={resetDemo} onCancel={() => setShowReset(false)} />}
   </div>

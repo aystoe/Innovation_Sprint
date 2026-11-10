@@ -10,6 +10,7 @@ export interface CommunityStore {
   publishEvent: (input: EventInput) => CommunityEvent
   addReview: (eventId: string, text: string, photos: string[]) => void
   toggleParticipation: (eventId: string) => void
+  sendMessage: (personId: string, text: string) => void
   resetDemo: () => void
 }
 export const CommunityContext = createContext<CommunityStore | null>(null)

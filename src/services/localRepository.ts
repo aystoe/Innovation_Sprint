@@ -1,6 +1,6 @@
 import { createSeedEvents } from '../data/events'
 import { EVENT_TYPES } from '../data/config'
-import type { Snapshot, Profile, CommunityEvent, Review, AudienceTrait } from '../types'
+import type { Snapshot, Profile, CommunityEvent, Review, AudienceTrait, Conversation } from '../types'
 
 /** Replace this adapter with API calls when a backend is added. UI code stays unchanged. */
 export const STORAGE_KEY = 'common-ground-react-demo-v1'
@@ -19,14 +19,19 @@ function validTrait(v: unknown): v is AudienceTrait {
 function validEvent(v: unknown): v is CommunityEvent {
   return record(v) && ['id','title','description','location','author','authorId','color','art'].every(k => typeof v[k] === 'string') && typeof v.type === 'string' && Object.hasOwn(EVENT_TYPES, v.type) && (v.topics === undefined || strings(v.topics)) && date(v.start) && date(v.end) && Array.isArray(v.reviews) && v.reviews.every(validReview) && record(v.audience) && ['everyone','targeted'].includes(String(v.audience.mode)) && Array.isArray(v.audience.traits) && v.audience.traits.every(validTrait)
 }
-export const freshSnapshot = (): Snapshot => ({ version: 1, profile: null, events: createSeedEvents() })
+function validConversation(v: unknown): v is Conversation {
+  return record(v) && typeof v.personId === 'string' && v.personId !== 'me' && Array.isArray(v.messages) && v.messages.every(m =>
+    record(m) && typeof m.id === 'string' && ['me', 'them'].includes(String(m.sender)) && typeof m.text === 'string' && date(m.createdAt) && (m.automated === undefined || typeof m.automated === 'boolean'))
+}
+export const freshSnapshot = (): Snapshot => ({ version: 1, profile: null, events: createSeedEvents(), conversations: [] })
 export function loadSnapshot(): { snapshot: Snapshot; warning: string } {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return { snapshot: freshSnapshot(), warning: '' }
     const v: unknown = JSON.parse(raw)
     if (!record(v) || v.version !== 1 || !(v.profile === null || validProfile(v.profile)) || !Array.isArray(v.events) || !v.events.every(validEvent)) throw new Error('Invalid saved data')
-    return { snapshot: v as unknown as Snapshot, warning: '' }
+    const chatsValid = v.conversations === undefined || (Array.isArray(v.conversations) && v.conversations.every(validConversation) && new Set(v.conversations.map(c => c.personId)).size === v.conversations.length)
+    return { snapshot: { ...v, conversations: chatsValid ? (v.conversations ?? []) : [] } as unknown as Snapshot, warning: chatsValid ? '' : 'Saved chats could not be loaded. Your profile and events are unchanged.' }
   } catch { return { snapshot: freshSnapshot(), warning: 'Saved demo data could not be loaded. Starting with sample data.' } }
 }
 export function saveSnapshot(snapshot: Snapshot): boolean {
