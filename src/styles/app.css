@@ -1041,3 +1041,32 @@ h1, .hero h2, .art-title { white-space: pre-line; }
   font-size: 10px;
   line-height: 1.5;
 }
+/* Interest filters and community rankings */
+.nav button { font-size:9px; }
+.interest-filter { min-width:0; border:1px solid var(--line); border-radius:14px; padding:12px; margin:16px 0; background:#fffefa; }
+.interest-filter legend { font-size:11px; font-weight:650; padding:0 5px; }
+.filter-chips { display:flex; flex-wrap:wrap; gap:7px; margin:10px 0; }
+.interest-button.selected { background:var(--green); border-color:var(--green); color:white; }
+.interest-filter summary { cursor:pointer; font-size:11px; margin-top:12px; }
+.interest-filter .help { overflow-wrap:anywhere; }
+.leaderboard-heading { padding:12px 0 8px; }
+.trophy-art { display:grid; place-items:center; width:54px; height:54px; border-radius:18px; background:#e8eed7; margin-bottom:18px; }
+.trophy-art svg { width:30px; height:30px; }
+.period-switch { display:flex; gap:4px; padding:5px; border-radius:12px; background:#e9eddc; margin:20px 0 10px; }
+.period-switch button { flex:1; border:0; border-radius:9px; padding:10px 4px; font-size:12px; background:transparent; color:var(--muted); }
+.period-switch button.selected { background:var(--green); color:white; box-shadow:0 2px 5px #263f3218; }
+.your-rank { background:#e8efd8; color:var(--green); padding:12px; border-radius:11px; font-size:11px; margin-top:15px; }
+.leaderboard-table { width:100%; border-collapse:collapse; margin-top:16px; font-size:12px; table-layout:fixed; }
+.leaderboard-table th { text-align:left; color:var(--muted); font-size:10px; font-weight:500; padding:10px 3px; }
+.leaderboard-table th:first-child { width:45px; }
+.leaderboard-table th:last-child { width:45px; }
+.leaderboard-table td { border-top:1px solid var(--line); padding:14px 3px; }
+.leaderboard-table th:last-child,.leaderboard-table td:last-child { text-align:right; }
+.leaderboard-table td:last-child { font-size:18px; font-weight:650; }
+.rank-person { display:flex; align-items:center; gap:9px; text-align:left; border:0; padding:0; background:transparent; width:100%; font-size:11px; }
+.rank-person img { width:32px; height:32px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.rank-person span { overflow-wrap:anywhere; min-width:0; }
+.rank-person small { display:block; color:var(--muted); font-size:9px; margin-top:3px; }
+.rank-number { font-size:11px; color:var(--muted); }
+.top-rank { color:#866221; font-weight:750; }
+.own-row { background:#eef3e4; }
