@@ -1,10 +1,10 @@
 /** Shared contracts: update these before changing data passed between pages. */
 export type FeedId = 'official' | 'social' | 'notices'
-export type NavigationId = FeedId | 'leaderboard'
+export type NavigationId = Exclude<FeedId, 'notices'> | 'members' | 'leaderboard'
 export type RankingPeriod = 'day' | 'month' | 'year'
 export type Role = 'member' | 'organizer'
 export type EventType = 'job' | 'cofounder' | 'official' | 'hobby' | 'alumni' | 'party' | 'announcement'
-export type IconName = 'leaf' | 'bag' | 'people' | 'notice' | 'pencil' | 'calendar' | 'pin' | 'back' | 'photo' | 'lock' | 'star' | 'bell' | 'trophy'
+export type IconName = 'leaf' | 'bag' | 'people' | 'notice' | 'pencil' | 'calendar' | 'pin' | 'back' | 'photo' | 'lock' | 'star' | 'bell' | 'trophy' | 'search'
 export type TraitKind = 'interests' | 'courses' | 'profession' | 'major'
 export type ContactPreference = 'gray' | 'yellow' | 'green'
 export interface AudienceTrait { kind: TraitKind; value: string }
@@ -44,7 +44,7 @@ export interface CommunityEvent {
 }
 export type EventInput = Pick<CommunityEvent, 'type' | 'title' | 'description' | 'location' | 'start' | 'end' | 'audience' | 'topics'>
 export interface Snapshot { version: 1; profile: Profile | null; events: CommunityEvent[] }
-export type BackPage = { kind: 'feed' } | { kind: 'leaderboard' } | { kind: 'detail'; eventId: string }
+export type BackPage = { kind: 'feed' } | { kind: 'members' } | { kind: 'leaderboard' } | { kind: 'detail'; eventId: string }
 export type Page = BackPage
   | { kind: 'create' }
   | { kind: 'profile'; personId: string; backTo: BackPage }

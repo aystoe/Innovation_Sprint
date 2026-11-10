@@ -1,10 +1,11 @@
 /** Shared contracts: update these before changing data passed between pages. */
 export type FeedId = 'official' | 'social' | 'notices'
 export type NavigationId = Exclude<FeedId, 'notices'> | 'members' | 'leaderboard'
-export type RankingPeriod = 'day' | 'month' | 'year'
+export type RankingPeriod = 'month' | 'semester'
+export type RankingRole = 'participant' | 'organizer'
 export type Role = 'member' | 'organizer'
 export type EventType = 'job' | 'cofounder' | 'official' | 'hobby' | 'alumni' | 'party' | 'announcement'
-export type IconName = 'leaf' | 'bag' | 'people' | 'notice' | 'pencil' | 'calendar' | 'pin' | 'back' | 'photo' | 'lock' | 'star' | 'bell' | 'trophy' | 'search'
+export type IconName = 'leaf' | 'bag' | 'people' | 'notice' | 'pencil' | 'calendar' | 'pin' | 'back' | 'photo' | 'lock' | 'star' | 'bell' | 'trophy' | 'search' | 'filter'
 export type TraitKind = 'interests' | 'courses' | 'profession' | 'major'
 export type ContactPreference = 'gray' | 'yellow' | 'green'
 export interface AudienceTrait { kind: TraitKind; value: string }

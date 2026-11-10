@@ -49,9 +49,9 @@ export default function App() {
   switch (page.kind) {
     case 'members': content = <MembersPage filters={memberFilters} onFiltersChange={setMemberFilters} onProfile={openProfile} />; break
     case 'leaderboard': content = <LeaderboardPage onProfile={openProfile} />; break
-    case 'feed': content = <EventFeedPage feed={feed} onEvent={eventId => setPage({ kind: 'detail', eventId })} onProfile={openProfile} />; break
+    case 'feed': content = <EventFeedPage feed={feed} onEvent={eventId => setPage({ kind: 'detail', eventId })} />; break
     case 'create': content = <CreateEventPage feed={feed} onBack={backToFeed} onPublished={event => { setFeed(EVENT_TYPES[event.type].feed); backToFeed(); notify('Event published to your feed.') }} />; break
-    case 'detail': content = <EventDetailPage eventId={page.eventId} onBack={backToFeed} onProfile={openProfile} onReview={() => setPage({ kind: 'review', eventId: page.eventId })} onRegister={startRegistration} notify={notify} />; break
+    case 'detail': content = <EventDetailPage eventId={page.eventId} onBack={backToFeed} onReview={() => setPage({ kind: 'review', eventId: page.eventId })} onRegister={startRegistration} notify={notify} />; break
     case 'review': content = <ReviewPage eventId={page.eventId} onBack={() => setPage({ kind: 'detail', eventId: page.eventId })} onPosted={() => { setPage({ kind: 'detail', eventId: page.eventId }); notify('Your review has been posted.') }} />; break
     case 'profile': content = <ProfilePage personId={page.personId} onBack={() => setPage(page.backTo)} onEdit={startRegistration} notify={notify} />; break
     case 'register': content = <RegistrationPage initial={registrationDraft} editing={!!store.snapshot.profile} onBack={backToFeed} onContinue={draft => { setRegistrationDraft(draft); setPage({ kind: 'onboarding' }) }} />; break
