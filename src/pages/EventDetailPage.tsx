@@ -9,7 +9,7 @@ import { EventArtwork } from '../components/EventArtwork'
 import { ReviewCard } from '../components/ReviewCard'
 import { Icon } from '../components/Icon'
 export function EventDetailPage({ eventId, onBack, onProfile, onReview, onRegister, notify }: { eventId: string; onBack: () => void; onProfile: (id: string) => void; onReview: () => void; onRegister: () => void; notify: (message: string) => void }) {
-  const { snapshot, role, getPerson, toggleParticipation } = useCommunity()
+  const { snapshot, getPerson, toggleParticipation } = useCommunity()
   const [, tick] = useState(0)
   useEffect(() => { const timer = window.setInterval(() => tick(n => n + 1), 30_000); return () => clearInterval(timer) }, [])
   const event = snapshot.events.find(e => e.id === eventId)

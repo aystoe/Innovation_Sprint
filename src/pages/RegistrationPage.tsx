@@ -9,7 +9,7 @@ import { ContactPreferencePicker } from '../components/ContactPreferencePicker'
 import { getContactOption } from '../data/contactPreferences'
 import { isWebUrl } from '../utils/format'
 const PROFESSIONS = ['Student',  'Alumni',  'Founder',  'Educator',  'Organizer',]
-export function RegistrationPage({ initial, editing, onBack, onContinue }: { initial: Profile; editing: boolean; onBack: () => void; onContinue: (profile: Profile) => void }) {
+export function RegistrationPage({ initial, onBack, onContinue }: { initial: Profile; editing: boolean; onBack: () => void; onContinue: (profile: Profile) => void }) {
   const [draft, setDraft] = useState(() => ({...initial, occupation: PROFESSIONS.includes(initial.occupation) ? initial.occupation : '', }))
   const [busy, setBusy] = useState(false), [error, setError] = useState('')
   function field(key: Exclude<keyof Profile, 'topics' | 'attendedEventIds'>, value: string) { setDraft(d => ({ ...d, [key]: value })) }

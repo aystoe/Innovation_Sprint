@@ -8,7 +8,7 @@ import { PhotoPicker } from '../components/PhotoPicker'
 import { FormError } from '../components/FormError'
 import { Icon } from '../components/Icon'
 export function ReviewPage({ eventId, onBack, onPosted }: { eventId: string; onBack: () => void; onPosted: () => void }) {
-  const { snapshot, role, addReview } = useCommunity()
+  const { snapshot, addReview } = useCommunity()
   const [text, setText] = useState(''), [photos, setPhotos] = useState<string[]>([]), [busy, setBusy] = useState(false), [error, setError] = useState('')
   const event = snapshot.events.find(e => e.id === eventId)
   if (!event || !canReadEvent(event, snapshot.profile) || !isEnded(event)) return <><BackButton onClick={onBack} /><div className="empty"><h2>Reviews are not available.</h2><p>Reviews open after an accessible event ends.</p></div></>
