@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useCommunity } from '../context/CommunityContext'
 import { findOrganizerPeople, sendOrganizerRequest } from '../services/organizerLive'
+import { CONTRIBUTIONS, openTo, canAsk, REQUEST_TITLES } from '../services/organizer'
 import { LiveRequests } from '../components/LiveRequests'
-import { CONTRIBUTIONS, freshOrganizerState, openTo, canAsk, REQUEST_TITLES } from '../services/organizer'
 import { photoSource } from '../utils/avatar'
 import { V3_IMAGES } from '../services/eventImages'
 import { FormError } from '../components/FormError'
@@ -20,7 +20,6 @@ const SLACK_CHANNEL_URL: string = 'https://utum-techtalents.slack.com/archives/C
 interface Props { view: 'room' | 'find' | 'asks'; onNavigate: (view: 'room' | 'find' | 'asks' | 'create') => void; onFeed: (feed: 'official' | 'social') => void; notify: (message: string) => void }
 export function OrganizerPage({ view, onNavigate, onFeed, notify }: Props) {
   const store = useCommunity()
-  const state = store.snapshot.organizer ?? freshOrganizerState(store.userId)
   const [kind, setKind] = useState<ContributionType | ''>('')
   const [founder, setFounder] = useState(false), [query, setQuery] = useState('')
   const [target, setTarget] = useState<Profile | null>(null)
