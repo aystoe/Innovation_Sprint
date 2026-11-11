@@ -23,3 +23,15 @@ export function eventImage(event: Pick<CommunityEvent, 'id' | 'type' | 'image'>)
   }
   return samples[event.id] ?? (event.type==='party' ? V3_IMAGES.social : event.type==='official' ? V3_IMAGES.talk : ['job','cofounder'].includes(event.type) ? V3_IMAGES.team : DEFAULT_EVENT_IMAGE)
 }
+
+/** Loaded only when saving without a user-selected image; never pre-populates the form. */
+export async function loadDefaultEventImage():Promise<string>{
+ const response=await fetch(DEFAULT_EVENT_IMAGE)
+ if(!response.ok)throw new Error('Could not load the default event image. Please retry.')
+ const blob=await response.blob()
+ if(!blob.size||blob.size>5*1024*1024)throw new Error('Default image is unavailable.')
+ const bytes=new Uint8Array(await blob.arrayBuffer())
+ // The bundled default is JPEG. Check bytes instead of trusting hosting MIME configuration.
+ if(bytes[0]!==0xff||bytes[1]!==0xd8)throw new Error('Default image response is not a JPEG.')
+ return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error('Could not read the default image.'));reader.onload=()=>resolve(String(reader.result));reader.readAsDataURL(new Blob([bytes],{type:'image/jpeg'}))})
+}

@@ -19,7 +19,7 @@ export function PhotoPicker({ photos, onChange, onBusyChange, max = 4, label = '
         if (!active.current) return
       }
       if (active.current) { onChange(next.length ? next : photos); setError(message) }
-    } finally { if (active.current) { setBusy(false); onBusyChange(false) } }
+    } catch (cause) { if(active.current)setError(cause instanceof Error ? cause.message : 'Could not prepare this photo. Please try another image.') } finally { if (active.current) { setBusy(false); onBusyChange(false) } }
   }
   return <div>
     <label className="upload-label"><Icon name="photo" />{label}<input className="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp" multiple={max > 1} disabled={busy} onChange={e => { const files = Array.from(e.currentTarget.files ?? []); e.currentTarget.value = ''; if (files.length) void upload(files) }} /></label>

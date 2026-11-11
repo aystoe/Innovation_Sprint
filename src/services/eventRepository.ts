@@ -1,3 +1,5 @@
+import {loadDefaultEventImage} from './eventImages'
+import {eventImagePlan,isDefaultEventImagePath} from './eventImagePolicy'
 import {requireSupabase} from '../lib/supabase'
 import type {CommunityEvent,EventInput,Role} from '../types'
 import {validateEvent} from './eventRules'
@@ -13,7 +15,7 @@ async function mapEvent(r:EventRow,previous?:CommunityEvent):Promise<CommunityEv
   if(!photo.error)image=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error('Image read failed'));reader.readAsDataURL(photo.data) }).catch(()=>undefined)
  }
  return {id:r.id,authorId:r.author_id,author:r.author_name,type:r.type,title:r.title,description:r.description,location:r.location,
-  start:r.starts_at,end:r.ends_at,audience:{mode:r.audience_mode,traits:r.audience_traits},topics:r.topics,image,imagePath:r.image_path??undefined,
+  start:r.starts_at,end:r.ends_at,audience:{mode:r.audience_mode,traits:r.audience_traits},topics:r.topics,image,imageIsDefault:isDefaultEventImagePath(r.image_path),imagePath:r.image_path??undefined,
   channels:{digest:r.channel_digest,slack:r.channel_slack,calendar:r.channel_calendar},color:'blue',art:'',reviews:[],revision:r.revision,
   registrationMode:r.registration_mode,externalUrl:r.external_url??undefined,capacity:r.capacity,registeredCount:Number(r.registered_count),
   myRegistration:r.my_registration,myAttended:r.my_attended,hostLabel:r.host_label,timeConfirmed:r.time_confirmed}
@@ -43,17 +45,19 @@ export async function saveEvent(input:EventInput,userId:string,mode:Role,previou
   topics:input.topics??[],channel_digest:input.channels?.digest??false,channel_slack:input.channels?.slack??false,channel_calendar:input.channels?.calendar??false,
   registration_mode:input.registrationMode??'internal',external_url:input.externalUrl?.trim()||null,capacity:input.capacity??null,
   host_label:input.hostLabel??'',time_confirmed:input.timeConfirmed??true}
- const changedImage=input.image!==previous?.image
- const imageData=changedImage && input.image ? decodeEventImage(input.image) : null
+ const plan=eventImagePlan(input.image,previous)
+ const desiredImage=plan.needsDefault ? await loadDefaultEventImage() : input.image
+ const changedImage=!plan.keep && desiredImage!==previous?.image
+ const imageData=changedImage && desiredImage ? decodeEventImage(desiredImage) : null
  // For edits, upload first. For creation, persist the real author's event before Storage author checks.
  let revision=previous?.revision
  if(!previous){const inserted=await client.from('events').insert({id,author_id:userId,created_mode:mode,...values}).select('revision').single();if(inserted.error){if(inserted.error.code==='23505'){const existing=await fetchEvent(id);if(existing.authorId===userId)return {event:existing,warning:'This event was already created. Open Edit to review any remaining changes.'}}throw inserted.error};revision=inserted.data.revision}
  let path=previous?.imagePath??null;let uploaded:string|null=null;let warning=''
  if(changedImage){
-  if(!input.image)path=null
+  if(!desiredImage)path=null
   else {
    if(!imageData)throw new Error('Invalid image')
-   const candidate=`${userId}/${id}/${crypto.randomUUID()}.${imageData.extension}`
+   const candidate=`${userId}/${id}/${plan.isDefault ? 'default-' : ''}${crypto.randomUUID()}.${imageData.extension}`
    const upload=await client.storage.from('event-images').upload(candidate,imageData.bytes,{contentType:imageData.mime,upsert:false})
    if(upload.error){if(previous)throw upload.error;warning='Event created, but the image failed. Edit this event to retry.'}
    else {uploaded=candidate;path=candidate}

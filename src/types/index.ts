@@ -47,6 +47,7 @@ export interface CommunityEvent {
   channels?: { digest: boolean; slack: boolean; calendar: boolean }
   image?: string
   topics?: string[]
+  imageIsDefault?: boolean
   imagePath?: string
   revision?: number
   registrationMode?: 'internal' | 'external' | 'both' | 'none'

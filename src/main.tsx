@@ -1,3 +1,4 @@
+import {AppErrorBoundary} from './components/AppErrorBoundary'
 import {Capacitor} from '@capacitor/core'
 import {NativeBridge} from './native/NativeBridge'
 import { StrictMode } from 'react'
@@ -15,4 +16,4 @@ function SignedInApp() {
   const { session } = useAuth()
   return session ? <CommunityProvider key={session.user.id} userId={session.user.id}><App /></CommunityProvider> : null
 }
-createRoot(document.getElementById('root')!).render(<StrictMode><AuthProvider><NativeBridge/><AuthGate><SignedInApp /></AuthGate></AuthProvider></StrictMode>)
+createRoot(document.getElementById('root')!).render(<StrictMode><AuthProvider><NativeBridge/><AppErrorBoundary><AuthGate><SignedInApp /></AuthGate></AppErrorBoundary></AuthProvider></StrictMode>)
