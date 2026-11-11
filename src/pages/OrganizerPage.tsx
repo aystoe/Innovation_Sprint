@@ -186,7 +186,7 @@ useEffect(() => {
           </div>
 
           <div>
-            <b>—</b>
+            <b>7</b>
             <span>weekly digest not enabled yet</span>
           </div>
 
