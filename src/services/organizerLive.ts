@@ -18,7 +18,7 @@ export type LiveRequest = {
   title: string; body: string; status: RequestStatus; created_at: string
   sender: { name: string } | null; recipient: { name: string } | null
 }
-export function requestPageSize(direction: 'sent' | 'received') { return direction === 'sent' ? 2 : 20 }
+export function requestPageSize(direction: 'sent' | 'received') { return direction === 'sent' ? 2 : 1 }
 export async function listOrganizerRequests(userId: string, direction: 'sent' | 'received', page: number, signal: AbortSignal) {
   const size = requestPageSize(direction)
   const { data, count, error } = await requireSupabase().from('organizer_requests')
