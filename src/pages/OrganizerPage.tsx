@@ -203,7 +203,6 @@ useEffect(() => {
           </div>
         </div>
       ) : null}
-      <div className="org-kpis">{[['4,812','reachable by e-mail'],['71%','chose the weekly digest'],['312','open to talks, jury, mentoring'],['38%','opened last Monday’s digest']].map(([value,label]) => <div key={label}><b>{value}</b><span>{label}</span></div>)}</div>
       <div className="bluebox">
         <span className="eyebrow">
           Upcoming cohort handover
