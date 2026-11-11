@@ -24,3 +24,5 @@ Supabase에는 avatars/event-images 버킷 및 기존 Storage RLS가 적용되�
 6. 사용자 사진 제거 → Save 시 기본 이미지로 바뀌고 이전 파일 정리 정책을 유지한다.
 
 Node 단위 테스트와 구문 검사는 실행했으며, 실제 브라우저·원격 Storage 동작은 미검증이다. 전체 빌드는 설치된 TypeScript 도구가 없어 실행하지 못했다.
+
+추가 수정: 파일 선택창을 열기 전부터 화면이 하얘진다는 보고에 따라 visually-hidden file input + label을 제거했다. 실제 button에서 display:none file input을 클릭하며, 선택/취소 후 버튼으로 preventScroll 포커스를 복원한다. 고정 높이/overflow:hidden 화면에서 보이지 않는 input으로 포커스 스크롤이 일어나는 경로를 제거한다. 실제 사용자 브라우저에서 원인이 확정된 것은 아니며 해당 조합을 검증하는 React 테스트는 작성했지만 의존성 미설치로 미실행이다.

@@ -234,3 +234,6 @@ h1 { font-size:30px; line-height:1; letter-spacing:-.01em; }
 .phone .course-badge__term { display:block; width:100%; padding:7px 6px; font:600 13px/1.4 var(--body); letter-spacing:normal; text-align:center; color:#29235c; background:#e6e3ff; border-radius:0; overflow-wrap:anywhere; }
 .phone .course-badge__check { top:8px; right:8px; width:20px; height:20px; background:#0600ff; }
 @media (max-width:320px) { .phone .course-grid { grid-template-columns:minmax(0,1fr); } }
+
+/* File picker uses a real button; the hidden file input must never receive layout focus. */
+.photo-picker-trigger { width:100%; }
