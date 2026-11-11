@@ -18,11 +18,13 @@ export type LiveRequest = {
   title: string; body: string; status: RequestStatus; created_at: string
   sender: { name: string } | null; recipient: { name: string } | null
 }
+export function requestPageSize(direction: 'sent' | 'received') { return direction === 'sent' ? 2 : 20 }
 export async function listOrganizerRequests(userId: string, direction: 'sent' | 'received', page: number, signal: AbortSignal) {
+  const size = requestPageSize(direction)
   const { data, count, error } = await requireSupabase().from('organizer_requests')
     .select('id,sender_id,recipient_id,contribution_type,title,body,status,created_at,sender:profiles!organizer_requests_sender_id_fkey(name),recipient:profiles!organizer_requests_recipient_id_fkey(name)', { count: 'exact' })
     .eq(direction === 'sent' ? 'sender_id' : 'recipient_id', userId)
-    .order('created_at', { ascending: false }).order('id').range(page * 20, page * 20 + 19).abortSignal(signal)
+    .order('created_at', { ascending: false }).order('id').range(page * size, page * size + size - 1).abortSignal(signal)
   if (error) throw error
   return { requests: (data ?? []) as unknown as LiveRequest[], total: count ?? 0 }
 }

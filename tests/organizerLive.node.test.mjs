@@ -49,3 +49,11 @@ test('response errors propagate rather than optimistically showing an answer',as
   await assert.rejects(service.answerOrganizerRequest('request','yes'),e=>e.message==='Only recipient may respond')
   assert.equal(calls[0][1],'respond_to_organizer_request')
 })
+test('sent requests use two non-overlapping rows per page',async()=>{
+  for (const page of [0,1,2]) {
+    const {service,calls}=setup([{data:[],count:5,error:null}])
+    await service.listOrganizerRequests('A','sent',page,new AbortController().signal)
+    assert.equal(JSON.stringify(calls.find(c=>c[0]==='range')),JSON.stringify(['range',page*2,page*2+1]))
+    assert.equal(JSON.stringify(calls.find(c=>c[0]==='eq')),JSON.stringify(['eq','sender_id','A']))
+  }
+})

@@ -290,3 +290,32 @@ h1 { font-size:30px; line-height:1; letter-spacing:-.01em; }
   padding: 4px;
   font-size: 11px;
 }
+/* Live request cards: readable status, inset date and compact page navigation. */
+.request-card > .request-date {
+  display:block;
+  padding:0 12px 12px;
+  color:#4b5563;
+  font-size:12px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+.request-card > header > .request-status {
+  display:inline-block;
+  margin-top:6px;
+  font-size:11px;
+  font-weight:800;
+}
+.request-card > header > .request-status.delivered { background:#dbeafe; color:#1e3a8a; }
+.request-card > header > .request-status.yes { background:#d8f5e3; color:#075a31; }
+.request-card > header > .request-status.opened { background:#fff1d6; color:#7a4500; }
+.request-card > header > .request-status.no { background:#fde2df; color:#8a1c14; }
+.request-pagination {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:16px;
+}
+.request-pagination > button { width:auto; margin:0; padding:10px 12px; }
+.request-pagination > button:disabled { opacity:.4; cursor:default; }
+.request-pagination > span { flex-shrink:0; font-size:13px; font-variant-numeric:tabular-nums; }
