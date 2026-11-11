@@ -14,7 +14,9 @@ export function AudiencePicker({ value, onChange }: { value: Audience; onChange:
   useEffect(()=>{const controller=new AbortController();loadMemberOptions(controller.signal).then(options=>{
     if(!controller.signal.aborted)setRemote({interests:options.interests,courses:options.courses,profession:options.occupations,major:options.majors})
   }).catch(()=>{if(!controller.signal.aborted)setLoadError('Profile filter options could not be loaded. Reopen this form to retry.')});return()=>controller.abort()},[])
-  const options = isDemoMode ? availableTraits(people, TOPICS) : remote ?? {interests:[],courses:[],profession:[],major:[]}
+  const options = isDemoMode
+    ? availableTraits(people, [...TOPICS])
+    : remote ?? { interests: [], courses: [], profession: [], major: [] }
   function toggle(trait: AudienceTrait) {
     onChange({ ...value, traits: value.traits.some(t => sameTrait(t, trait)) ? value.traits.filter(t => !sameTrait(t, trait)) : [...value.traits, trait] })
   }

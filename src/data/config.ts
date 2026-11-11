@@ -13,5 +13,5 @@ export const FEEDS: Record<FeedId, { title: string; intro: string; label: string
   social: { title: 'Good people.\nReal connections.', intro: 'Make room for shared hobbies, familiar faces and a little fun.', label: 'Social Events', eyebrow: 'A community beyond the programme', hero: 'Less scrolling.\nMore showing up.', sub: 'Find your people, one shared moment at a time.', icon: 'people' },
   notices: { title: 'The organizer room.', intro: 'A dedicated space for organizers to share updates and coordinate.', label: 'Announcements', eyebrow: 'Keep everyone on the same page', hero: 'Well organized.\nWell connected.', sub: 'Internal announcements, reminders and programme updates.', icon: 'notice' },
 }
-export const TOPICS = ['Aerospace', 'Robotics', 'Biology', 'Chemistry', 'Entrepreneurship', 'AI & Technology', 'Sustainability', 'Internships', 'Meetups', 'Workshop', 'Internships', 'Mentoring', 'Networking', 'Sports & Outdoors'] as const
+export const TOPICS = ["Aerospace", "Robotics", "Biology", "Chemistry", "Entrepreneurship", "AI & Technology", "Sustainability", "Internships", "Meetups", "Workshop", "Internships", "Mentoring", "Networking", "Sports & Outdoors"]
 export const TRAIT_LABELS = { interests: 'Interests', courses: 'Courses taken', profession: 'Profession', major: 'Major / Field of study' }
