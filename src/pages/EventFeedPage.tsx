@@ -1,3 +1,4 @@
+import { isDemoMode } from '../lib/dataMode'
 import { useEffect, useState } from 'react'
 import { useCommunity } from '../context/CommunityContext'
 import { FEEDS, EVENT_TYPES, TOPICS } from '../data/config'
@@ -10,7 +11,7 @@ import { InterestPicker } from '../components/InterestPicker'
 import type { FeedId } from '../types'
 
 export function EventFeedPage({ feed, onEvent }: { feed: FeedId; onEvent: (id: string) => void }) {
-  const { snapshot, role } = useCommunity()
+  const { snapshot, role,eventsLoading,eventsError,refreshEvents } = useCommunity()
   const [filterMode, setFilterMode] = useState<'all' | 'mine' | 'custom'>('all')
   const [selected, setSelected] = useState<string[]>([])
   const [, refresh] = useState(0)
@@ -20,7 +21,7 @@ export function EventFeedPage({ feed, onEvent }: { feed: FeedId; onEvent: (id: s
     document.addEventListener('visibilitychange', tick)
     return () => { window.clearInterval(timer); document.removeEventListener('visibilitychange', tick) }
   }, [])
-  const accessibleEvents = snapshot.events.filter(event => EVENT_TYPES[event.type].feed === feed && canReadEvent(event, snapshot.profile, role))
+  const accessibleEvents = snapshot.events.filter(event => EVENT_TYPES[event.type].feed === feed && (!isDemoMode || canReadEvent(event, snapshot.profile, role)))
   const mine = profileInterests(snapshot.profile)
   const options = uniqueInterests([...TOPICS, ...mine, ...accessibleEvents.flatMap(eventTopics)])
   const activeInterests = filterMode === 'mine' ? mine : selected
@@ -44,7 +45,9 @@ export function EventFeedPage({ feed, onEvent }: { feed: FeedId; onEvent: (id: s
     </FilterPanel>
     {filterMode === 'mine' && !mine.length && <p className="filter-guidance">Add interests in Edit profile, or choose an interest using the filter button.</p>}
     <div className="section-head"><strong role="status" aria-live="polite">{events.length} {events.length === 1 ? 'event' : 'events'}</strong><span>Date · Earliest first</span></div>
+    {eventsLoading && <p role="status">Loading events…</p>}
+    {eventsError && <p role="alert">{eventsError} <button className="secondary" onClick={() => void refreshEvents()}>Retry</button></p>}
     {events.map(event => <EventCard key={event.id} event={event} onOpen={() => onEvent(event.id)} />)}
-    {events.length === 0 && <div className="empty"><p>{filterMode !== 'all' ? 'No events match these interests. Try another interest or clear the filters.' : canCreate ? 'No events yet. Tap the pencil to create one.' : 'No events yet.'}</p>{filterMode !== 'all' && <button type="button" className="secondary" onClick={clear}>Show all events</button>}</div>}
+    {!eventsLoading && !eventsError && events.length === 0 && <div className="empty"><p>{filterMode !== 'all' ? 'No events match these interests. Try another interest or clear the filters.' : canCreate ? 'No events yet. Tap the pencil to create one.' : 'No events yet.'}</p>{filterMode !== 'all' && <button type="button" className="secondary" onClick={clear}>Show all events</button>}</div>}
   </>
 }

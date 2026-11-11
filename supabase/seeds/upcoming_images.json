@@ -1,0 +1,22 @@
+[
+  {
+    "id": "172cda23-ab39-5698-a9b4-8833b7366f7d",
+    "source_key": "public-makers-pd-2026",
+    "file": "public/events/public-makers.png"
+  },
+  {
+    "id": "d6e0ba8d-8ae2-555a-bbbd-76a7c8e35ce9",
+    "source_key": "bmw-mm-workshop-2026",
+    "file": "public/events/bmw-workshop.png"
+  },
+  {
+    "id": "b828a7d6-8ccc-593d-a9da-3d67e7561c04",
+    "source_key": "start-and-spread-2026",
+    "file": "public/events/start-and-spread.jpg"
+  },
+  {
+    "id": "9802dc22-886a-5bd3-b129-54b96e813d5b",
+    "source_key": "tum-ideaward-2026",
+    "file": "public/events/ideaward.png"
+  }
+]

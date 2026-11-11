@@ -19,6 +19,9 @@ export interface Profile {
   interests: string
   courses: string
   photo: string
+  photoPath?: string
+  photoUnavailable?: boolean
+  teamOrder?: number
   social: string
   socialOther: string
   topics: string[]
@@ -44,19 +47,30 @@ export interface CommunityEvent {
   channels?: { digest: boolean; slack: boolean; calendar: boolean }
   image?: string
   topics?: string[]
+  imagePath?: string
+  revision?: number
+  registrationMode?: 'internal' | 'external' | 'both' | 'none'
+  externalUrl?: string
+  capacity?: number | null
+  registeredCount?: number
+  myRegistration?: 'registered' | 'cancelled' | null
+  myAttended?: boolean
+  hostLabel?: string
+  timeConfirmed?: boolean
   reviews: Review[]
 }
-export type EventInput = Pick<CommunityEvent, 'type' | 'title' | 'description' | 'location' | 'start' | 'end' | 'audience' | 'topics' | 'image' | 'channels'>
+export type EventInput = Pick<CommunityEvent, 'type' | 'title' | 'description' | 'location' | 'start' | 'end' | 'audience' | 'topics' | 'image' | 'channels' | 'registrationMode' | 'externalUrl' | 'capacity' | 'hostLabel' | 'timeConfirmed'>
 export interface ChatMessage { id: string; sender: 'me' | 'them'; text: string; createdAt: string; automated?: boolean }
 export interface Conversation { personId: string; messages: ChatMessage[] }
 export type ContributionType = 'Speaker' | 'Jury' | 'Mentor' | 'Feedback'
 export type RequestStatus = 'delivered' | 'opened' | 'yes' | 'no'
-export interface OrganizerRequest { id: string; title: string; type: ContributionType; body: string; createdAt: string; recipients: { personId: string; status: RequestStatus }[] }
+export interface OrganizerRequest { id: string; senderId?: string; title: string; type: ContributionType; body: string; createdAt: string; recipients: { personId: string; status: RequestStatus }[] }
 export interface OrganizerState { requests: OrganizerRequest[]; handovers: number }
 export interface Snapshot { organizer?: OrganizerState; version: 1; profile: Profile | null; events: CommunityEvent[]; conversations: Conversation[] }
 export type BackPage = { kind: 'feed' } | { kind: 'room' } | { kind: 'find' } | { kind: 'asks' } | { kind: 'chats' } | { kind: 'chat'; personId: string } | { kind: 'members' } | { kind: 'leaderboard' } | { kind: 'detail'; eventId: string }
 export type Page = BackPage
   | { kind: 'create' }
+  | { kind: 'edit'; eventId: string }
   | { kind: 'profile'; personId: string; backTo: BackPage }
   | { kind: 'register' }
   | { kind: 'onboarding' }

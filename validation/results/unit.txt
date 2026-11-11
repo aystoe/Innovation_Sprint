@@ -1,0 +1,68 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> common-ground-react@1.0.0 test:unit
+> node --experimental-strip-types --test tests/*.node.test.mjs
+
+✔ latest page and earlier pages are ascending without duplicates (6.082796ms)
+✔ reconnect retrieves more than one page of missing messages (14.531924ms)
+✔ lost response retries same key and becomes exactly one sent message (5.744541ms)
+✔ repeated clicks with same ID while pending issue only one send (2.000246ms)
+✔ send acknowledgement does not skip missing messages (2.221562ms)
+✔ realtime after lost ack resolves failed message without retry (8.234214ms)
+✔ logout aborts requests, removes subscriptions and clears messages (3.050075ms)
+✔ old response cannot rehydrate restarted session (1.251424ms)
+✔ retry preserves content and validates length (1.422117ms)
+✔ merge handles bigint beyond JS safe integer (3.102734ms)
+✔ repeated open reuses room and subscription (0.729962ms)
+✔ leaving room releases its subscription and polling; reopening catches up (2.699152ms)
+✔ leaving before room creation completes does not create a hidden subscription (0.928557ms)
+✔ visiting 100 rooms sequentially keeps one channel instead of accumulating 100 (19.2009ms)
+✔ accept name@tum.de (2.0493ms)
+✔ accept name@mytum.de (0.582375ms)
+✔ accept  Name+tag@TUM.DE  (0.51129ms)
+✔ accept a.b@mytum.de (0.169255ms)
+✔ reject "a@gmail.com" (0.416931ms)
+✔ reject "a@tum.de.evil.com" (0.43391ms)
+✔ reject "a@evil-tum.de" (0.409193ms)
+✔ reject "a@cs.tum.de" (0.582517ms)
+✔ reject "a@mytum.de.evil.com" (0.431027ms)
+✔ reject "a@tum.de@evil.com" (0.453539ms)
+✔ reject "a@@tum.de" (0.599798ms)
+✔ reject "@tum.de" (0.175259ms)
+✔ reject "a b@tum.de" (0.511064ms)
+✔ reject "a@tum.de/path" (0.895667ms)
+✔ reject "a@tum.de\nevil.com" (0.267299ms)
+✔ reject "a@tüm.de" (0.612276ms)
+✔ reject "a@tum.de." (0.10303ms)
+✔ reject "a@mytumXde" (0.383927ms)
+✔ reject "" (0.157993ms)
+✔ normalizes outer whitespace and email case (0.179388ms)
+✔ revoked or expired credentials require login (0.300305ms)
+✔ offline and transient server failure preserve refresh credentials (0.188758ms)
+✔ external https://example.com/form (1.619853ms)
+✔ external https://forms.gle/abc (0.322569ms)
+✔ reject javascript:alert(1) (0.203812ms)
+✔ reject http://example.com (0.208402ms)
+✔ reject https://user:password@example.com (0.222266ms)
+✔ reject https://example.com/a b (0.162444ms)
+✔ reject  (0.240675ms)
+✔ allows JPEG PNG WebP payloads (0.658139ms)
+✔ rejects SVG and oversized image payload (1139.725696ms)
+✔ load profile ramps to 200, holds 15 minutes and drains (2.207755ms)
+✔ metrics separate expected capacity rejects from unexpected errors (0.797497ms)
+✔ staging guard rejects missing settings and mismatched project (0.802036ms)
+✔ fixtures cannot target another project or reuse one user 200 times (0.697954ms)
+✔ database marker is mandatory (0.622054ms)
+✔ directory parameters include page and fixed page size (2.443218ms)
+✔ literal search characters remain data rather than PostgREST filter syntax (0.40649ms)
+✔ interest ordering does not reset pagination or send duplicate queries (0.360859ms)
+✔ a changed filter invalidates the current page key (0.295783ms)
+✔ does not mutate caller interests (0.440554ms)
+ℹ tests 55
+ℹ suites 0
+ℹ pass 55
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1632.613122

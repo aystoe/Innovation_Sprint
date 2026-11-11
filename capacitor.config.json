@@ -1,0 +1,11 @@
+{
+  "appId": "org.commonground.community",
+  "appName": "Common Ground",
+  "webDir": "dist",
+  "backgroundColor": "#ffffff",
+  "android": { "allowMixedContent": false, "webContentsDebuggingEnabled": false },
+  "plugins": {
+    "SystemBars": { "insetsHandling": "native", "initialViewportFitValueHint": "cover", "style": "LIGHT" },
+    "Keyboard": { "resizeOnFullScreen": true }
+  }
+}

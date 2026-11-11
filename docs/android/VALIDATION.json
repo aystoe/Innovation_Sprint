@@ -1,0 +1,14 @@
+{
+  "nodeTests": {
+    "passed": 66,
+    "failed": 0
+  },
+  "nativeResourceXml": "parsed",
+  "scriptSyntax": "passed",
+  "capacitorInstall": "blocked: npm E403",
+  "viteBuild": "blocked: tsc missing",
+  "androidProjectGenerated": false,
+  "distGenerated": false,
+  "apkGenerated": false,
+  "deviceTests": "not run"
+}

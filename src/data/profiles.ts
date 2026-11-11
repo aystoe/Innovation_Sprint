@@ -1,3 +1,4 @@
+import { isDemoMode } from '../lib/dataMode'
 import type { Profile } from '../types'
 import { DEMO_MEMBERS } from './demoMembers'
 import { avatarImage } from '../utils/avatar'
@@ -11,12 +12,12 @@ organizer:{name:'Carl Meyer',occupation:'Programme Coordinator',bio:'Helping our
 }
 
 const BASE_PROFILES: Record<string, Profile> = Object.fromEntries([...Object.entries(rawProfiles).map(([id, value]) => [id, { ...value, id, social: '', socialOther: '', topics: [], contactPreference: 'green', openTo: ['Speaker', 'Mentor', 'Feedback'] }] as const), ...DEMO_MEMBERS.map(profile => [profile.id, profile] as const)])
-export const SAMPLE_PROFILES: Record<string, Profile> = {
+export const SAMPLE_PROFILES: Record<string, Profile> = isDemoMode ? {
   ...BASE_PROFILES,
   ...Object.fromEntries(
     TEAM_PROFILES.map(person => [person.id, person])
   ),
-}
+} : {}
 
 
-export const emptyProfile = (): Profile => ({ id: 'me', name: '', occupation: '', bio: '', major: '', interests: '', courses: '', photo: '', social: '', socialOther: '', topics: [], attendedEventIds: [] })
+export const emptyProfile = (userId: string): Profile => ({ id: userId, name: '', occupation: '', bio: '', major: '', interests: '', courses: '', photo: '', social: '', socialOther: '', topics: [], attendedEventIds: [] })

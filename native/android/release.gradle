@@ -1,0 +1,32 @@
+import groovy.json.JsonSlurper
+
+def identity = new JsonSlurper().parse(project.file('../../native/app.identity.json'))
+android.defaultConfig.versionCode = identity.versionCode as Integer
+android.defaultConfig.versionName = identity.versionName
+
+def signingProps = new Properties()
+def signingFile = rootProject.file('keystore.properties')
+if (signingFile.exists()) signingFile.withInputStream { signingProps.load(it) }
+def valueFor = { envName, propertyName -> System.getenv(envName) ?: signingProps.getProperty(propertyName) }
+def storePath = valueFor('CG_STORE_FILE', 'storeFile')
+def storePass = valueFor('CG_STORE_PASSWORD', 'storePassword')
+def aliasName = valueFor('CG_KEY_ALIAS', 'keyAlias')
+def aliasPass = valueFor('CG_KEY_PASSWORD', 'keyPassword')
+def signingReady = storePath && storePass && aliasName && aliasPass
+if (signingReady) {
+    android.signingConfigs.create('communityRelease') {
+        storeFile = rootProject.file(storePath)
+        storePassword = storePass
+        keyAlias = aliasName
+        keyPassword = aliasPass
+    }
+    android.buildTypes.release.signingConfig = android.signingConfigs.communityRelease
+}
+// Reject accidental unsigned command-line release. Android Studio's signing wizard injects its own key.
+gradle.taskGraph.whenReady { graph ->
+    def releasePackaging = graph.allTasks.any { it.name ==~ /(?i)(assemble|bundle|package).*release.*/ }
+    def studioSigning = project.hasProperty('android.injected.signing.store.file')
+    if (releasePackaging && !signingReady && !studioSigning) {
+        throw new GradleException('Release signing missing. Use Android Studio Generate Signed APK or private keystore.properties / CG_* environment variables.')
+    }
+}

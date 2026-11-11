@@ -1,0 +1,14 @@
+/* Native-only geometry; existing colors, type, cards and desktop preview stay intact. */
+html.native-app,html.native-app body,html.native-app #root { width:100%;height:100%;margin:0;overflow:hidden; }
+html.native-app body { display:block;min-height:0;padding:0;background:#fff; }
+html.native-app #root { height:var(--app-height,100dvh);padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px); }
+html.native-app .phone { width:100%;height:100%;min-height:0;max-height:none;border:0;box-shadow:none;border-radius:0; }
+html.native-app .page { min-height:0; }
+html.native-app .homebar { display:none; }
+html.native-app.keyboard-open .phone > .brand,
+html.native-app.keyboard-open .phone > .userbar,
+html.native-app.keyboard-open .phone > .help,
+html.native-app.keyboard-open .phone > .nav { display:none; }
+html.native-app.keyboard-open #root { padding-bottom:0; }
+html.native-app .chat-composer textarea { font-size:16px; }
+.native-error { position:fixed;z-index:10000;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:12px;background:#fff;border:2px solid #000; }

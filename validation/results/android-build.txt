@@ -1,0 +1,11 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> common-ground-react@1.0.0 android:init
+> npm run build && node scripts/android.mjs init
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> common-ground-react@1.0.0 build
+> tsc -b && vite build
+
+sh: 1: tsc: not found

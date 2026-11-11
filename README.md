@@ -1,3 +1,15 @@
+> **Android 추가:** [Windows Android Studio 실행·서명·업데이트](docs/android/WINDOWS_ANDROID.ko.md). `npm run android:init`으로 공식 프로젝트 생성, 이후 `android:sync`로 dist를 내장합니다. 현재 환경에서는 npm 403으로 APK 빌드가 미실행입니다.
+
+> **배포 전 검증:** [검증 결과](validation/REPORT.ko.md), [200명 부하 시나리오](validation/LOAD_SCENARIO.ko.md). 실제 DB/부하 검증은 아직 미실행입니다.
+
+> **현재 5단계:** 실제 1대1 채팅, 재시도·재연결, 권한 테스트와 migration 007 적용은 [SUPABASE_CHAT_SETUP.ko.md](docs/SUPABASE_CHAT_SETUP.ko.md)를 확인하세요. 자동 답장은 제거했습니다.
+
+> **현재 4단계:** 행사 연결·실제 행사 seed·실시간 갱신은 [SUPABASE_EVENTS_SETUP.ko.md](docs/SUPABASE_EVENTS_SETUP.ko.md)를 확인하세요.
+
+> **현재 3단계:** Members·프로필 운영 연결과 팀원 순서 설정은 [SUPABASE_MEMBERS_SETUP.ko.md](docs/SUPABASE_MEMBERS_SETUP.ko.md)를 먼저 보세요. 운영 모드가 기본이며 디렉터리는 실제 가입 프로필만 조회합니다.
+
+> **Supabase 인증 2단계 추가:** 현재 실행·대시보드 설정은 [SUPABASE_AUTH_SETUP.ko.md](docs/SUPABASE_AUTH_SETUP.ko.md)를 먼저 확인하세요. 아래는 기존 데모 설명입니다. 인증/프로필은 Supabase에 저장하고, 다른 데모 기능은 현재 세션 메모리에서 실행합니다. 최초 설치는 `npm install`입니다.
+
 ## Design and Frontend
 
 | Location | Responsibility |

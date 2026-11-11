@@ -1,0 +1,68 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> common-ground-react@1.0.0 test
+> npm run test:unit && vitest run
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> common-ground-react@1.0.0 test:unit
+> node --experimental-strip-types --test tests/*.node.test.mjs
+
+✔ latest page and earlier pages are ascending without duplicates (7.70393ms)
+✔ reconnect retrieves more than one page of missing messages (13.926541ms)
+✔ lost response retries same key and becomes exactly one sent message (2.258206ms)
+✔ repeated clicks with same ID while pending issue only one send (1.017329ms)
+✔ send acknowledgement does not skip missing messages (1.542978ms)
+✔ realtime after lost ack resolves failed message without retry (0.779364ms)
+✔ logout aborts requests, removes subscriptions and clears messages (5.489361ms)
+✔ old response cannot rehydrate restarted session (0.961911ms)
+✔ retry preserves content and validates length (0.798296ms)
+✔ merge handles bigint beyond JS safe integer (0.461388ms)
+✔ repeated open reuses room and subscription (0.323422ms)
+✔ leaving room releases its subscription and polling; reopening catches up (1.129827ms)
+✔ leaving before room creation completes does not create a hidden subscription (0.418498ms)
+✔ accept name@tum.de (2.804775ms)
+✔ accept name@mytum.de (0.381137ms)
+✔ accept  Name+tag@TUM.DE  (0.206361ms)
+✔ accept a.b@mytum.de (0.08514ms)
+✔ reject "a@gmail.com" (0.224441ms)
+✔ reject "a@tum.de.evil.com" (0.083446ms)
+✔ reject "a@evil-tum.de" (0.07761ms)
+✔ reject "a@cs.tum.de" (0.111142ms)
+✔ reject "a@mytum.de.evil.com" (0.156359ms)
+✔ reject "a@tum.de@evil.com" (0.305679ms)
+✔ reject "a@@tum.de" (0.215632ms)
+✔ reject "@tum.de" (0.122581ms)
+✔ reject "a b@tum.de" (0.104124ms)
+✔ reject "a@tum.de/path" (0.126297ms)
+✔ reject "a@tum.de\nevil.com" (0.057576ms)
+✔ reject "a@tüm.de" (0.060881ms)
+✔ reject "a@tum.de." (0.237017ms)
+✔ reject "a@mytumXde" (0.062619ms)
+✔ reject "" (0.055385ms)
+✔ normalizes outer whitespace and email case (0.135311ms)
+✔ revoked or expired credentials require login (0.210338ms)
+✔ offline and transient server failure preserve refresh credentials (0.350627ms)
+✔ external https://example.com/form (2.124019ms)
+✔ external https://forms.gle/abc (0.25857ms)
+✔ reject javascript:alert(1) (0.246388ms)
+✔ reject http://example.com (0.405837ms)
+✔ reject https://user:password@example.com (0.23698ms)
+✔ reject https://example.com/a b (0.235679ms)
+✔ reject  (0.173463ms)
+✔ allows JPEG PNG WebP payloads (0.965364ms)
+✔ rejects SVG and oversized image payload (737.983404ms)
+✔ directory parameters include page and fixed page size (3.584493ms)
+✔ literal search characters remain data rather than PostgREST filter syntax (0.272498ms)
+✔ interest ordering does not reset pagination or send duplicate queries (0.236456ms)
+✔ a changed filter invalidates the current page key (0.320717ms)
+✔ does not mutate caller interests (0.538285ms)
+ℹ tests 49
+ℹ suites 0
+ℹ pass 49
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1135.772963
+sh: 1: vitest: not found

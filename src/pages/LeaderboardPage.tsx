@@ -7,7 +7,7 @@ import { Icon } from '../components/Icon'
 import type { RankingPeriod, RankingRole } from '../types'
 
 export function LeaderboardPage({ onProfile }: { onProfile: (id: string) => void }) {
-  const { snapshot } = useCommunity()
+  const { userId, snapshot } = useCommunity()
   const [role, setRole] = useState<RankingRole>('participant')
   const [participantPeriod, setParticipantPeriod] = useState<RankingPeriod>('month')
   const [now, setNow] = useState(() => new Date())
@@ -19,7 +19,7 @@ export function LeaderboardPage({ onProfile }: { onProfile: (id: string) => void
   }, [])
   const period = role === 'organizer' ? 'semester' : participantPeriod
   const rows = buildLeaderboard([...Object.values(SAMPLE_PROFILES), ...(snapshot.profile ? [snapshot.profile] : [])], snapshot.events, period, now, role)
-  const own = rows.find(row => row.profile.id === 'me')
+  const own = rows.find(row => row.profile.id === userId)
   const range = periodLabel(period, now)
   const action = role === 'organizer' ? 'hosted' : 'attended'
   return <>
@@ -31,7 +31,7 @@ export function LeaderboardPage({ onProfile }: { onProfile: (id: string) => void
     {period === 'semester' && <p className="help">Semesters: Apr–Sep and Oct–Mar, in your local time.</p>}
     <div aria-live="polite" aria-atomic="true">
       {snapshot.profile && <p className="your-rank">{own ? `Your rank: #${own.rank} · ${own.count} ${own.count === 1 ? 'event' : 'events'} ${action}` : `No completed events ${action} by you in this period yet.`}</p>}
-      {rows.length ? <table className="leaderboard-table"><caption className="visually-hidden">{range}: events {action}</caption><thead><tr><th scope="col">Rank</th><th scope="col">{role === 'organizer' ? 'Organizer' : 'Member'}</th><th scope="col">Events</th></tr></thead><tbody>{rows.map(row => <tr key={row.profile.id} className={row.profile.id === 'me' ? 'own-row' : ''}><td><span className={`rank-number ${row.rank <= 3 ? 'top-rank' : ''}`}>#{row.rank}</span></td><td><button type="button" className="rank-person" onClick={() => onProfile(row.profile.id)}><img src={photoSource(row.profile.photo)} alt="" /><span>{row.profile.name}{row.profile.id === 'me' && <small>You</small>}</span></button></td><td>{row.count}</td></tr>)}</tbody></table> : <div className="empty"><Icon name="trophy" /><h2>A fresh start.</h2><p>No completed events {action} in this period yet.</p></div>}
+      {rows.length ? <table className="leaderboard-table"><caption className="visually-hidden">{range}: events {action}</caption><thead><tr><th scope="col">Rank</th><th scope="col">{role === 'organizer' ? 'Organizer' : 'Member'}</th><th scope="col">Events</th></tr></thead><tbody>{rows.map(row => <tr key={row.profile.id} className={row.profile.id === userId ? 'own-row' : ''}><td><span className={`rank-number ${row.rank <= 3 ? 'top-rank' : ''}`}>#{row.rank}</span></td><td><button type="button" className="rank-person" onClick={() => onProfile(row.profile.id)}><img src={photoSource(row.profile.photo)} alt="" /><span>{row.profile.name}{row.profile.id === userId && <small>You</small>}</span></button></td><td>{row.count}</td></tr>)}</tbody></table> : <div className="empty"><Icon name="trophy" /><h2>A fresh start.</h2><p>No completed events {action} in this period yet.</p></div>}
     </div>
     <p className="small-note">{role === 'organizer' ? 'Host counts use the event organizer.' : 'Attendance is based on saved participation history.'} Includes sample community members.</p>
   </>

@@ -1,0 +1,11 @@
+PASS: 36 non-TSX TypeScript files parse (NOT typechecking)
+PASS syntax: loadtest/guard.mjs
+PASS syntax: loadtest/metrics.mjs
+PASS syntax: loadtest/prepare.mjs
+PASS syntax: loadtest/run.mjs
+PASS syntax: scripts/test-capacity-race.mjs
+PASS syntax: scripts/test-direct-chat.mjs
+PASS syntax: scripts/test-release.mjs
+PASS syntax: scripts/upload-seed-images.mjs
+(node:6) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

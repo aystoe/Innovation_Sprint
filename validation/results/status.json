@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-11",
+  "deploymentGate": "BLOCKED_UNVERIFIED",
+  "executed": {
+    "nodeTests": {
+      "passed": 55,
+      "failed": 0
+    },
+    "nonTsxSyntaxFiles": 36,
+    "scriptSyntax": "passed"
+  },
+  "blocked": {
+    "dependencyInstall": "npm E403",
+    "build": "tsc missing",
+    "typecheck": "tsc missing",
+    "reactTests": "vitest missing",
+    "lint": "eslint missing",
+    "databaseIntegration": "staging credentials and database runtime absent",
+    "load200": "staging credentials absent"
+  },
+  "measuredProductionLikeMetrics": {
+    "latencyP50Ms": null,
+    "latencyP95Ms": null,
+    "latencyP99Ms": null,
+    "errorRate": null,
+    "peakRealtimeConnections": null,
+    "supabaseMessageUsage": null
+  },
+  "improvements": {
+    "chatSubscriptionRegression": "100 sequential rooms: peak 1 active test subscription; 0 after dispose",
+    "queryIndexes": "migration 008 authored, not applied or measured"
+  }
+}

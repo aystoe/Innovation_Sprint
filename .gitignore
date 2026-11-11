@@ -8,3 +8,24 @@ dist/
 .DS_Store
 *.tsbuildinfo
 coverage/
+
+# Local environment files (the template remains tracked)
+.env
+.env.*
+!.env.example
+
+# Isolated staging credentials and run outputs
+loadtest/fixture*.json*
+validation/load-*/
+
+# Android local/build/signing artifacts; generated source android/ should be committed after init
+android/.gradle/
+android/.idea/
+android/local.properties
+android/**/build/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/keystore.properties
+*.jks
+*.keystore

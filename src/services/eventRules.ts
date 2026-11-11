@@ -1,3 +1,4 @@
+import { validExternalUrl } from './eventInputRules'
 import { isPhoto } from '../utils/avatar'
 import { EVENT_TYPES } from '../data/config'
 import type { AudienceTrait, CommunityEvent, EventInput, Profile, Role, TraitKind } from '../types'
@@ -13,7 +14,7 @@ export function profileTraits(profile: Profile, kind: TraitKind): string[] {
 }
 /** Any selected trait matches (OR). A creator can always see their own posts. */
 export function matchesAudience(event: CommunityEvent, profile: Profile | null): boolean {
-  if (event.authorId === 'me') return true
+  if (event.authorId === profile?.id) return true
   if (event.audience.mode === 'everyone') return true
   if (!profile) return false
   return event.audience.traits.some(trait => profileTraits(profile, trait.kind).some(v => v.toLowerCase().trim() === trait.value.toLowerCase().trim()))
@@ -21,19 +22,18 @@ export function matchesAudience(event: CommunityEvent, profile: Profile | null):
 export function canReadEvent(
   event: CommunityEvent,
   profile: Profile | null,
-  role?: Role
+  _role?: Role
 ) {
-  if (role === 'organizer') return true
-  if (event.type === 'announcement') {
-    return true
-  }
-
+  void _role // Screen mode is intentionally not an authorization input.
   return matchesAudience(event, profile)
 }
 export function validateEvent(input: EventInput, role: Role): string | null {
+  if (input.capacity != null && (!Number.isSafeInteger(input.capacity) || input.capacity<1 || input.capacity>2147483647)) return 'Capacity must be a positive whole number.'
+  if (['external','both'].includes(input.registrationMode ?? '') && !validExternalUrl(input.externalUrl ?? '')) return 'Enter a valid HTTPS registration URL.'
+  if (input.externalUrl && !validExternalUrl(input.externalUrl)) return 'External links must use HTTPS.'
   if (input.image && !isPhoto(input.image)) return 'Please choose a valid event photo.'
   if (!Object.hasOwn(EVENT_TYPES, input.type)) return 'Please choose an event type.'
-  if (input.type === 'announcement' && role !== 'organizer') return 'Only organizers can publish announcements.'
+  if (input.type === 'announcement' && role !== 'organizer') return 'Switch to the Organizer screen to publish announcements.'
   if (!input.title.trim() || !input.description.trim() || !input.location.trim() || !Number.isFinite(Date.parse(input.start)) || !Number.isFinite(Date.parse(input.end))) return 'Please complete every required field.'
   if (Date.parse(input.end) <= Date.parse(input.start)) return 'The end time must be after the start time.'
   if (input.title.length > 100 || input.description.length > 3000 || input.location.length > 140) return 'Please keep your text within the field limits.'
@@ -42,8 +42,8 @@ export function validateEvent(input: EventInput, role: Role): string | null {
   return null
 }
 export function audienceLabel(event: CommunityEvent) {
-  const restriction = event.type === 'announcement' ? 'Organizers only · ' : ''
-  return restriction + (event.audience.mode === 'targeted' ? 'Matching profiles · ' + event.audience.traits.map(t => t.value).join(', ') : event.type === 'announcement' ? 'All organizers' : 'Everyone in the community')
+  const restriction = event.type === 'announcement' ? 'Organizer workspace · ' : ''
+  return restriction + (event.audience.mode === 'targeted' ? 'Matching profiles · ' + event.audience.traits.map(t => t.value).join(', ') : 'Everyone in the community')
 }
 export function availableTraits(profiles: Profile[], topics: string[]): Record<TraitKind, string[]> {
   return {

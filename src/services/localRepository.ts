@@ -10,7 +10,7 @@ const record = (value: unknown): value is Record<string, unknown> => typeof valu
 const strings = (value: unknown): value is string[] => Array.isArray(value) && value.every(v => typeof v === 'string')
 const date = (value: unknown) => typeof value === 'string' && Number.isFinite(Date.parse(value))
 function validProfile(v: unknown): v is Profile {
-  return record(v) && ['id','name','occupation','bio','major','interests','courses','photo','social','socialOther'].every(k => typeof v[k] === 'string') && typeof v.name === 'string' && !!v.name.trim() && v.id === 'me' && strings(v.topics) && strings(v.attendedEventIds) && (v.openTo === undefined || (strings(v.openTo) && v.openTo.every(type=>CONTRIBUTIONS.includes(type as typeof CONTRIBUTIONS[number]))))
+  return record(v) && ['id','name','occupation','bio','major','interests','courses','photo','social','socialOther'].every(k => typeof v[k] === 'string') && typeof v.name === 'string' && !!v.name.trim() && /^[0-9a-f-]{36}$/i.test(String(v.id)) && strings(v.topics) && strings(v.attendedEventIds) && (v.openTo === undefined || (strings(v.openTo) && v.openTo.every(type=>CONTRIBUTIONS.includes(type as typeof CONTRIBUTIONS[number]))))
 }
 function validReview(v: unknown): v is Review {
   return record(v) && typeof v.id === 'string' && typeof v.name === 'string' && typeof v.text === 'string' && strings(v.photos) && date(v.date)
@@ -22,7 +22,7 @@ function validEvent(v: unknown): v is CommunityEvent {
   return record(v) && ['id','title','description','location','author','authorId','color','art'].every(k => typeof v[k] === 'string') && typeof v.type === 'string' && Object.hasOwn(EVENT_TYPES, v.type) && (v.image === undefined || typeof v.image === 'string') && (v.topics === undefined || strings(v.topics)) && date(v.start) && date(v.end) && Array.isArray(v.reviews) && v.reviews.every(validReview) && record(v.audience) && ['everyone','targeted'].includes(String(v.audience.mode)) && Array.isArray(v.audience.traits) && v.audience.traits.every(validTrait)
 }
 function validConversation(v: unknown): v is Conversation {
-  return record(v) && typeof v.personId === 'string' && v.personId !== 'me' && Array.isArray(v.messages) && v.messages.every(m =>
+  return record(v) && typeof v.personId === 'string' && Array.isArray(v.messages) && v.messages.every(m =>
     record(m) && typeof m.id === 'string' && ['me', 'them'].includes(String(m.sender)) && typeof m.text === 'string' && date(m.createdAt) && (m.automated === undefined || typeof m.automated === 'boolean'))
 }
 function validOrganizer(value: unknown): boolean {
